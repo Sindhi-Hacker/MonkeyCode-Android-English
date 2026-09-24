@@ -9,6 +9,7 @@ import { TaskCard } from '@/components/TaskCard';
 import { BigTitle, EmptyView, GlassTop, LoadingView } from '@/components/ui';
 import { taskDisplayName } from '@/utils/format';
 import { spacing, useTheme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 const PAGE_SIZE = 20;
 
