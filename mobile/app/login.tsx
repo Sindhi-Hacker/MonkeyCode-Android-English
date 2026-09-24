@@ -813,7 +813,7 @@ export default function LoginScreen() {
                 </Pressable>
               </View>
 
-              {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 12 }}>{error}</Text> : null}
+              {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 12 }}>{uiText(error)}</Text> : null}
               {Agreement}
 
               <Pressable onPress={onBaizhiSubmit} disabled={loginDisabled} style={({ pressed }) => [{ height: 54, backgroundColor: heroGreen2, borderRadius: 15, alignItems: 'center', justifyContent: 'center', marginTop: 4, overflow: 'hidden' }, primaryShadow, (loginDisabled || pressed) && { opacity: loginDisabled ? 0.55 : 0.86 }]}>
