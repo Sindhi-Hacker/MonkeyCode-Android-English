@@ -1,4 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
+import { uiText } from '@/platformText';
 
 type FileSaverNativeModule = {
   saveFile(sourceUri: string, suggestedName: string, mimeType: string): Promise<string | null>;
