@@ -15,6 +15,7 @@ import { Icons, providerIcon } from '@/components/Icons';
 import { Card, EmptyView, GlassNav, IconButton, LoadingView, PrimaryButton, PickerSheet, type PickerOption } from '@/components/ui';
 import { gitPlatformLabel, OAUTH_PLATFORMS } from '@/git';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 const MANUAL_KEY = '__manual__';
 
@@ -76,7 +77,7 @@ export default function GitIdentitiesScreen() {
 
   const onDelete = useCallback((identity: GitIdentity) => {
     const name = identity.remark?.trim() || identity.username || gitPlatformLabel(identity.platform);
-    Alert.alert('移除账号', `确定要移除「${name}」吗？使用该账号的项目将无法继续拉取/提交代码。`, [
+    androidAlert('移除账号', `确定要移除「${name}」吗？使用该账号的项目将无法继续拉取/提交代码。`, [
       { text: '取消', style: 'cancel' },
       {
         text: '移除',
@@ -88,7 +89,7 @@ export default function GitIdentitiesScreen() {
             setError('');
           } catch (e) {
             // 后端 409：被项目占用
-            Alert.alert('无法移除', e instanceof ApiError ? e.message : '请稍后重试');
+            androidAlert('无法移除', e instanceof ApiError ? e.message : '请稍后重试');
           }
         },
       },
@@ -122,7 +123,7 @@ export default function GitIdentitiesScreen() {
             <EmptyView icon="key" title="还没有 Git 账号" subtitle={'绑定 GitHub / GitLab / Gitee 等账号后\n即可创建项目，让 AI 拉取与提交代码'} />
           ) : (
             <>
-              {error ? <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 12, marginBottom: 10 }}>刷新失败：{error}</Text> : null}
+              {error ? <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 12, marginBottom: 10 }}>{uiText('刷新失败：')}{error}</Text> : null}
               <Card style={{ paddingHorizontal: 15, paddingVertical: 3 }}>
                 {identities.map((it, i) => (
                   <IdentityRow key={it.id} identity={it} divider={i !== 0}
@@ -131,7 +132,7 @@ export default function GitIdentitiesScreen() {
                 ))}
               </Card>
               <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 14, paddingHorizontal: 4, lineHeight: 17 }}>
-                点按账号可修改用户名 / 邮箱 / 备注与 Token。一个平台可绑定多个账号，创建项目时选择其一。
+                {uiText('点按账号可修改用户名 / 邮箱 / 备注与 Token。一个平台可绑定多个账号，创建项目时选择其一。')}
               </Text>
             </>
           )}

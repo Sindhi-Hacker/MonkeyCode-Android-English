@@ -24,6 +24,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { Glass } from '@/components/glass';
 import { Icons, Spinner } from '@/components/Icons';
 import { radius, spacing, statusInfo, toneColors, useTheme, type Theme } from '@/theme';
+import { uiText, uiTextExact } from '@/platformText';
 
 // MonkeyCode 猴子 logo（随主题：浅色主题用深色猴子，深色主题用亮色猴子）
 const MONKEY_LIGHT = require('../../assets/logo-light.png'); // 深色猴子(透明底) → 浅色背景
@@ -48,7 +49,7 @@ export function RunTimer({ startMs, style }: { startMs: number; style?: StylePro
     return () => clearInterval(id);
   }, []);
   const sec = Math.max(0, (now - startMs) / 1000);
-  return <Text style={[{ color: t.tx3, fontSize: 12, fontFamily: 'monospace' }, style]}>耗时 {sec.toFixed(1)} 秒</Text>;
+  return <Text style={[{ color: t.tx3, fontSize: 12, fontFamily: 'monospace' }, style]}>{uiText(`耗时 ${sec.toFixed(1)} 秒`)}</Text>;
 }
 
 // ── 「正在处理」打字动画：三个圆点依次淡入淡出，垂直居中（替代静态省略号）──────────
@@ -130,7 +131,7 @@ export function StatusLine({ status }: { status?: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 7 }}>
       <Animated.View style={{ width: 7, height: 7, borderRadius: 99, backgroundColor: s.dot, opacity: s.running ? pulse : 1 }} />
-      <Text style={{ color: s.labelColor, fontSize: 13, fontWeight: '600' }}>{s.label}</Text>
+      <Text style={{ color: s.labelColor, fontSize: 13, fontWeight: '600' }}>{uiText(s.label)}</Text>
     </View>
   );
 }
@@ -144,7 +145,7 @@ export function StatusBadge({ status }: { status?: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 24, paddingHorizontal: 10, borderRadius: 99, backgroundColor: tc.bg as string }}>
       {s.running ? <Spinner size={13} color={tc.c as string} sw={2} /> : <I size={13} color={tc.c as string} sw={2} />}
-      <Text style={{ color: tc.c as string, fontSize: 12, fontWeight: '600' }}>{s.label}</Text>
+      <Text style={{ color: tc.c as string, fontSize: 12, fontWeight: '600' }}>{uiTextExact(s.label)}</Text>
     </View>
   );
 }
@@ -156,13 +157,13 @@ export function RepoLine({ repo, branch, color }: { repo?: string; branch?: stri
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 7, minWidth: 0, flexShrink: 1 }}>
       <Icons.git size={13} color={c} sw={1.7} style={{ opacity: 0.85 }} />
-      <Text numberOfLines={1} style={{ color: c, fontSize: 12, fontFamily: 'monospace', flexShrink: 1 }}>{repo}</Text>
+      <Text numberOfLines={1} style={{ color: c, fontSize: 12, fontFamily: 'monospace', flexShrink: 1 }}{repo}</Text>
       {branch ? (
         <>
           <Text style={{ color: c, opacity: 0.4 }}>·</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
             <Icons.branch size={12} color={c} sw={1.7} />
-            <Text style={{ color: c, fontSize: 12, fontFamily: 'monospace' }}>{branch}</Text>
+            <Text style={{ color: c, fontSize: 12, fontFamily: 'monospace' }}{branch}</Text>
           </View>
         </>
       ) : null}
@@ -176,7 +177,7 @@ export function DiffStat({ add, del, files }: { add?: number; del?: number; file
   if (!add && !del) return null;
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9 }}>
-      {files ? <Text style={{ color: t.tx3, fontSize: 12, fontWeight: '500' }}>{files} 个文件</Text> : null}
+      {files ? <Text style={{ color: t.tx3, fontSize: 12, fontWeight: '500' }}>{files} {uiText('个文件')}</Text> : null}
       {add ? <Text style={{ color: t.add, fontSize: 12, fontWeight: '600', fontFamily: 'monospace' }}>+{add}</Text> : null}
       {del ? <Text style={{ color: t.del, fontSize: 12, fontWeight: '600', fontFamily: 'monospace' }}>−{del}</Text> : null}
     </View>
@@ -212,8 +213,8 @@ export function BigTitle({ title, sub }: { title: string; sub?: string }) {
   const t = useTheme();
   return (
     <View style={{ paddingHorizontal: spacing.pad, paddingTop:8,  paddingBottom: 2 }}>
-      <Text style={{ fontSize: 31, fontWeight: '500', letterSpacing: -0.9, color: t.tx, lineHeight: 39 }}>{title}</Text>
-      {sub ? <Text style={{ fontSize: 13, color: t.tx3, marginTop: 6, fontWeight: '500' }}>{sub}</Text> : null}
+      <Text style={{ fontSize: 31, fontWeight: '500', letterSpacing: -0.9, color: t.tx, lineHeight: 39 }}>{uiTextExact(title)}</Text>
+      {sub ? <Text style={{ fontSize: 13, color: t.tx3, marginTop: 6, fontWeight: '500' }}>{uiText(sub)}</Text> : null}
     </View>
   );
 }
@@ -253,7 +254,7 @@ export function PrimaryButton({ label, icon, onPress, disabled, block, style }: 
       style,
     ]}>
       {I ? <I size={block ? 18 : 17} color={t.acInk} sw={2.2} /> : null}
-      <Text style={{ color: t.acInk, fontSize: block ? 16 : 14.5, fontWeight: '700' }}>{label}</Text>
+      <Text style={{ color: t.acInk, fontSize: block ? 16 : 14.5, fontWeight: '700' }}>{uiTextExact(label)}</Text>
     </Pressable>
   );
 }
@@ -272,7 +273,7 @@ export function GlassTop({ title, right, collapsed }: { title: string; right?: R
       <Glass radius={0} border intensity={52} style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}>
         <View style={{ height: insets.top }} />
         <View style={{ height: 46, flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.pad }}>
-          <Text style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{title}</Text>
+          <Text style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{uiTextExact(title)}</Text>
           <View style={{ marginLeft: 'auto' }}>{right}</View>
         </View>
       </Glass>
@@ -341,7 +342,7 @@ export function Toast({ text, bottom = 108 }: { text: string; bottom?: number })
   return (
     <Animated.View style={{ position: 'absolute', alignSelf: 'center', bottom, zIndex: 95, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, paddingVertical: 11, borderRadius: 99, backgroundColor: t.tx, opacity: a, transform: [{ translateY: a.interpolate({ inputRange: [0, 1], outputRange: [8, 0] }) }], ...t.shLift }}>
       <Icons.check size={15} color={t.ac} sw={2.6} />
-      <Text style={{ color: t.bg, fontSize: 13.5, fontWeight: '600' }}>{text}</Text>
+      <Text style={{ color: t.bg, fontSize: 13.5, fontWeight: '600' }}>{uiText(text)}</Text>
     </Animated.View>
   );
 }
@@ -362,7 +363,7 @@ export function LoadingView({ label }: { label?: string }) {
       <ActivityIndicator color={t.ac} />
       {label ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-          <Text style={{ color: t.tx2, fontSize: 13, textAlign: 'center' }}>{trimmed}</Text>
+          <Text style={{ color: t.tx2, fontSize: 13, textAlign: 'center' }}>{uiText(trimmed)}</Text>
           {dots ? <TypingDots color={t.tx2} /> : null}
         </View>
       ) : null}
@@ -384,7 +385,7 @@ export function EmptyView({ title, subtitle, icon = 'sparkle' }: { title: string
         <MonkeyLogo size={76} style={{ marginBottom: 6, opacity: 0.92 }} />
       )}
       <Text style={{ color: t.tx, fontSize: 15, fontWeight: '600' }}>{title}</Text>
-      {subtitle ? <Text style={{ color: t.tx2, fontSize: 13, textAlign: 'center', lineHeight: 19 }}>{subtitle}</Text> : null}
+      {subtitle ? <Text style={{ color: t.tx2, fontSize: 13, textAlign: 'center', lineHeight: 19 }}>{uiText(subtitle)}</Text> : null}
     </Centered>
   );
 }

@@ -20,6 +20,7 @@ import { Icons } from '@/components/Icons';
 import { Toast, TypingDots } from '@/components/ui';
 import { GITLAB_DEFAULT_BASE, githubAppInstallUrl, gitPlatformLabel } from '@/git';
 import { useTheme } from '@/theme';
+import { uiText } from '@/platformText';
 
 const hostOf = (u: string) => u.match(/^https?:\/\/([^/]+)/)?.[1] ?? '';
 
@@ -126,7 +127,7 @@ export default function GitOAuthScreen() {
           <Pressable onPress={close} hitSlop={8} style={{ padding: 8 }}>
             <Icons.back size={22} color={t.tx} sw={2} />
           </Pressable>
-          <Text numberOfLines={1} style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: '700', color: t.tx, marginHorizontal: 2 }}>绑定 {label}</Text>
+          <Text numberOfLines={1} style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: '700', color: t.tx, marginHorizontal: 2 }}>{uiText(`绑定 ${label}`)}</Text>
           <Pressable onPress={copyUrl} hitSlop={6} style={({ pressed }) => [{ padding: 7 }, pressed && { opacity: 0.5 }]}>
             <Icons.copy size={18} color={t.tx2} sw={1.9} />
           </Pressable>
@@ -140,14 +141,14 @@ export default function GitOAuthScreen() {
         {preparing || (!webUrl && !error) ? (
           <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center', backgroundColor: t.bg }]}>
             <ActivityIndicator color={t.ac} />
-            <Text style={{ color: t.tx2, fontSize: 13, marginTop: 12 }}>正在准备授权…</Text>
+            <Text style={{ color: t.tx2, fontSize: 13, marginTop: 12 }}>{uiText('正在准备授权…')}</Text>
           </View>
         ) : error ? (
           <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center', backgroundColor: t.bg, paddingHorizontal: 40, gap: 14 }]}>
             <Icons.alert size={28} color={t.red} sw={2} />
             <Text style={{ color: t.tx, fontSize: 14, textAlign: 'center' }}>{error}</Text>
             <Pressable onPress={retry} style={{ backgroundColor: t.ac, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 24 }}>
-              <Text style={{ color: t.acInk, fontWeight: '700' }}>重试</Text>
+              <Text style={{ color: t.acInk, fontWeight: '700' }}>{uiText('重试')}</Text>
             </Pressable>
           </View>
         ) : (
@@ -175,7 +176,7 @@ export default function GitOAuthScreen() {
             <View style={[{ backgroundColor: t.bg2, borderRadius: 18, paddingVertical: 22, paddingHorizontal: 26, alignItems: 'center', gap: 12, minWidth: 200 }, t.shCard]}>
               <ActivityIndicator color={t.ac} />
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                <Text style={{ color: t.tx2, fontSize: 14 }}>正在完成绑定</Text>
+                <Text style={{ color: t.tx2, fontSize: 14 }}>{uiText('正在完成绑定')}</Text>
                 <TypingDots color={t.tx2} />
               </View>
             </View>

@@ -14,6 +14,7 @@ import { ModelIcon } from '@/components/ModelIcon';
 import { Card, EmptyView, GlassNav, IconButton, LoadingView, PrimaryButton } from '@/components/ui';
 import { modelLabel } from '@/config';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 function ModelRow({ model, onPress, onDelete, divider, t }: { model: Model; onPress: () => void; onDelete: () => void; divider: boolean; t: Theme }) {
   const title = modelLabel(model) || '未命名模型';
@@ -71,7 +72,7 @@ export default function MyModelsScreen() {
 
   const onDelete = useCallback((m: Model) => {
     const name = modelLabel(m) || '该模型';
-    Alert.alert('删除模型', `确定要删除「${name}」吗？删除后使用该模型的任务需改用其它模型。`, [
+    androidAlert('删除模型', `确定要删除「${name}」吗？删除后使用该模型的任务需改用其它模型。`, [
       { text: '取消', style: 'cancel' },
       {
         text: '删除',
@@ -82,7 +83,7 @@ export default function MyModelsScreen() {
             setModels((list) => list.filter((x) => x.id !== m.id));
             setError(''); // 残留的旧刷新错误不应在删空列表后冒出「加载失败」空态
           } catch (e) {
-            Alert.alert('删除失败', e instanceof ApiError ? e.message : '请稍后重试');
+            androidAlert('删除失败', e instanceof ApiError ? e.message : '请稍后重试');
           }
         },
       },
@@ -106,7 +107,7 @@ export default function MyModelsScreen() {
           ) : (
             <>
               {error ? (
-                <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 12, marginBottom: 10 }}>刷新失败：{error}</Text>
+                <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 12, marginBottom: 10 }}>{uiText('刷新失败：')}{error}</Text>
               ) : null}
               <Card style={{ paddingHorizontal: 15, paddingVertical: 3 }}>
                 {models.map((m, i) => (
@@ -118,9 +119,9 @@ export default function MyModelsScreen() {
         </ScrollView>
       )}
 
-      <GlassNav title="我的模型" onBack={() => router.back()} />
+      <GlassNav title={uiText('我的模型')!} onBack={() => router.back()} />
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: spacing.pad, paddingTop: 12, paddingBottom: insets.bottom + 12, backgroundColor: t.bg }}>
-        <PrimaryButton block label="添加模型" icon="plus" onPress={() => router.push('/model-form')} />
+        <PrimaryButton block label={uiText('添加模型')!} icon="plus" onPress={() => router.push('/model-form')} />
       </View>
     </View>
   );

@@ -12,6 +12,7 @@ import { Icons } from '@/components/Icons';
 import { authorizeAlipay, clearPendingAlipayAuthorization, consumePendingAlipayAuthorization } from '@/native/alipayAuth';
 import { authorizeDouyin } from '@/native/douyinAuth';
 import { useTheme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 const LOGO_LIGHT = require('../assets/logo-light.png');
 const norm = (u: string) => u.trim().replace(/\/+$/, '');
@@ -278,7 +279,7 @@ export default function LoginScreen() {
     setPhase('正在完成 GitHub 登录…');
     try {
       const targetBaseUrl = await applyServerSettings();
-      startBaizhiBridge('GitHub 登录', targetBaseUrl);
+      startBaizhiBridge(uiText('GitHub 登录')!, targetBaseUrl);
     } catch (e) {
       handledGithubCallbackRef.current = false;
       setView('password');
@@ -347,7 +348,7 @@ export default function LoginScreen() {
       const result = await authorizeDouyin();
       setPhase('正在完成抖音登录…');
       await startDouyinAppBaizhiLogin(result.code);
-      startBaizhiBridge('抖音登录', targetBaseUrl, undefined, true);
+      startBaizhiBridge(uiText('抖音登录')!, targetBaseUrl, undefined, true);
     } catch (e) {
       if ((e as { code?: string })?.code === 'E_DOUYIN_CANCELLED') return;
       setError(formatError(e, '抖音登录失败，请重试'));
@@ -367,7 +368,7 @@ export default function LoginScreen() {
       const authorizeUrl = await getBaizhiOAuthLoginUrl('github', GITHUB_CALLBACK_URL);
       handledGithubCallbackRef.current = false;
       setWebOAuthMode('github');
-      setWebOAuthTitle('GitHub 登录');
+      setWebOAuthTitle(uiText('GitHub 登录')!);
       setWebOAuthUrl(authorizeUrl);
       setWebOAuthKey((k) => k + 1);
       setView('oauthWeb');
@@ -390,7 +391,7 @@ export default function LoginScreen() {
         setView('phone');
         return;
       }
-      startBaizhiBridge('支付宝登录', targetBaseUrl, undefined, true);
+      startBaizhiBridge(uiText('支付宝登录')!, targetBaseUrl, undefined, true);
     } finally {
       alipayCompletingRef.current = '';
     }
@@ -503,7 +504,7 @@ export default function LoginScreen() {
       } else {
         await startBaizhiPhoneLogin(cleanPhone, cleanCode);
       }
-      startBaizhiBridge('手机号登录', targetBaseUrl, cleanPhone, true);
+      startBaizhiBridge(uiText('手机号登录')!, targetBaseUrl, cleanPhone, true);
     } catch (e) {
       setError(formatError(e, '登录失败，请重试'));
     } finally {
@@ -637,7 +638,7 @@ export default function LoginScreen() {
     <>
       <View style={{ marginTop: 22, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         <View style={{ flex: 1, height: 1, backgroundColor: '#E1E0DA' }} />
-        <Text style={{ color: softText, fontSize: 12, fontWeight: '600' }}>其它登录方式</Text>
+        <Text style={{ color: softText, fontSize: 12, fontWeight: '600' }}>{uiText('其它登录方式')}</Text>
         <View style={{ flex: 1, height: 1, backgroundColor: '#E1E0DA' }} />
       </View>
 
@@ -660,16 +661,16 @@ export default function LoginScreen() {
 
         {cloud ? (
           <>
-            <Pressable accessibilityRole="button" accessibilityLabel="手机号登录" onPress={() => { setError(''); setView('phone'); }} disabled={actionBusy} style={({ pressed }) => [{ width: 46, height: 46, borderRadius: 23, borderWidth: 1, borderColor: '#E7E6E0', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }, pressed && { opacity: 0.78 }, actionBusy && { opacity: 0.55 }]}>
+            <Pressable accessibilityRole="button" accessibilityLabel={uiText("手机号登录")} onPress={() => { setError(''); setView('phone'); }} disabled={actionBusy} style={({ pressed }) => [{ width: 46, height: 46, borderRadius: 23, borderWidth: 1, borderColor: '#E7E6E0', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }, pressed && { opacity: 0.78 }, actionBusy && { opacity: 0.55 }]}>
               <Icons.phoneDevice size={22} color="#20231F" />
             </Pressable>
-            <Pressable accessibilityRole="button" accessibilityLabel="支付宝登录" onPress={onAlipayLogin} disabled={actionBusy} style={({ pressed }) => [{ width: 46, height: 46, borderRadius: 23, borderWidth: 1, borderColor: '#E7E6E0', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }, pressed && { opacity: 0.78 }, actionBusy && { opacity: 0.55 }]}>
+            <Pressable accessibilityRole="button" accessibilityLabel={uiText("支付宝登录")} onPress={onAlipayLogin} disabled={actionBusy} style={({ pressed }) => [{ width: 46, height: 46, borderRadius: 23, borderWidth: 1, borderColor: '#E7E6E0', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }, pressed && { opacity: 0.78 }, actionBusy && { opacity: 0.55 }]}>
               <Icons.alipayBrand size={24} />
             </Pressable>
-            <Pressable accessibilityRole="button" accessibilityLabel="抖音登录" onPress={onDouyinLogin} disabled={actionBusy} style={({ pressed }) => [{ width: 46, height: 46, borderRadius: 23, borderWidth: 1, borderColor: '#E7E6E0', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }, pressed && { opacity: 0.78 }, actionBusy && { opacity: 0.55 }]}>
+            <Pressable accessibilityRole="button" accessibilityLabel={uiText("抖音登录")} onPress={onDouyinLogin} disabled={actionBusy} style={({ pressed }) => [{ width: 46, height: 46, borderRadius: 23, borderWidth: 1, borderColor: '#E7E6E0', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }, pressed && { opacity: 0.78 }, actionBusy && { opacity: 0.55 }]}>
               <Icons.douyinBrand size={24} />
             </Pressable>
-            <Pressable accessibilityRole="button" accessibilityLabel="GitHub 登录" onPress={onGithubLogin} disabled={actionBusy} style={({ pressed }) => [{ width: 46, height: 46, borderRadius: 23, borderWidth: 1, borderColor: '#E7E6E0', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }, pressed && { opacity: 0.78 }, actionBusy && { opacity: 0.55 }]}>
+            <Pressable accessibilityRole="button" accessibilityLabel={uiText("GitHub 登录")} onPress={onGithubLogin} disabled={actionBusy} style={({ pressed }) => [{ width: 46, height: 46, borderRadius: 23, borderWidth: 1, borderColor: '#E7E6E0', backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }, pressed && { opacity: 0.78 }, actionBusy && { opacity: 0.55 }]}>
               <Icons.github size={22} color="#16171A" />
             </Pressable>
           </>
@@ -684,10 +685,10 @@ export default function LoginScreen() {
         {agreed ? <Icons.check size={12} color="#FFFFFF" sw={3} /> : null}
       </Pressable>
       <Text style={{ flex: 1, fontSize: 12.5, color: mutedText, lineHeight: 19, fontWeight: '600' }}>
-        我已阅读并同意
-        <Text onPress={() => openDoc('/user-agreement')} style={{ color: heroGreen, fontWeight: '700' }}>《用户协议》</Text>
+        {uiText('我已阅读并同意')}
+        <Text onPress={() => openDoc('/user-agreement')} style={{ color: heroGreen, fontWeight: '700' }}>{uiText('《用户协议》')}</Text>
         和
-        <Text onPress={() => openDoc('/privacy-policy')} style={{ color: heroGreen, fontWeight: '700' }}>《隐私政策》</Text>
+        <Text onPress={() => openDoc('/privacy-policy')} style={{ color: heroGreen, fontWeight: '700' }}>{uiText('《隐私政策》')}</Text>
       </Text>
     </View>
   );
@@ -706,7 +707,7 @@ export default function LoginScreen() {
             <Pressable onPress={closeWebOAuth} hitSlop={8} style={{ padding: 8 }}>
               <Icons.back size={22} color={t.tx} sw={2} />
             </Pressable>
-            <Text numberOfLines={1} style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: '700', color: t.tx, marginHorizontal: 2 }}>{webOAuthTitle || '授权登录'}</Text>
+            <Text numberOfLines={1} style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: '700', color: t.tx, marginHorizontal: 2 }}>{uiText(webOAuthTitle || '授权登录')}</Text>
             <View style={{ width: 38 }} />
           </View>
         </View>
@@ -733,7 +734,7 @@ export default function LoginScreen() {
             <View style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: t.dark ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.82)' }}>
               <View style={[{ backgroundColor: t.bg2, borderRadius: 18, paddingVertical: 22, paddingHorizontal: 26, alignItems: 'center', gap: 12, minWidth: 200 }, t.shCard]}>
                 <ActivityIndicator color={t.ac} />
-                <Text style={{ color: t.tx2, fontSize: 14 }}>{phase || '正在完成登录…'}</Text>
+                <Text style={{ color: t.tx2, fontSize: 14 }}>{uiText(phase || '正在完成登录…')}</Text>
               </View>
             </View>
           ) : null}
@@ -753,19 +754,19 @@ export default function LoginScreen() {
           </Pressable>
           <View>
             <Text style={{ fontSize: 24, fontWeight: '800', color: '#FFFFFF', letterSpacing: 0 }}>MonkeyCode</Text>
-            <Text style={{ fontSize: 13, fontWeight: '600', color: 'rgba(255,255,255,0.82)', marginTop: 2, letterSpacing: 1 }}>智能开发平台</Text>
+            <Text style={{ fontSize: 13, fontWeight: '600', color: 'rgba(255,255,255,0.82)', marginTop: 2, letterSpacing: 1 }}>{uiText('智能开发平台')}</Text>
           </View>
         </View>
 
-        <Text style={{ marginTop: 32, fontSize: 30, fontWeight: '800', color: '#FFFFFF', letterSpacing: 0 }}>欢迎回来 👋</Text>
-        <Text style={{ marginTop: 8, fontSize: 14.5, fontWeight: '500', color: 'rgba(255,255,255,0.85)' }}>登录以继续你的智能开发之旅</Text>
+        <Text style={{ marginTop: 32, fontSize: 30, fontWeight: '800', color: '#FFFFFF', letterSpacing: 0 }}>{uiText('欢迎回来 👋')}</Text>
+        <Text style={{ marginTop: 8, fontSize: 14.5, fontWeight: '500', color: 'rgba(255,255,255,0.85)' }}>{uiText('登录以继续你的智能开发之旅')}</Text>
 
         <View style={[{ marginTop: 30, backgroundColor: sheetBg, borderRadius: 26, paddingTop: 22, paddingHorizontal: 22, paddingBottom: 24, gap: 15 }, loginShadow]}>
           {view === 'phone' && cloud ? (
             <>
               <Pressable onPress={() => { setError(''); setOAuthPhoneToken(''); setView('password'); }} hitSlop={8} style={{ flexDirection: 'row', alignItems: 'center', gap: 4, alignSelf: 'flex-start' }}>
                 <Icons.back size={16} color={mutedText} sw={2} />
-                <Text style={{ color: mutedText, fontSize: 14 }}>账号密码登录</Text>
+                <Text style={{ color: mutedText, fontSize: 14 }}>{uiText('账号密码登录')}</Text>
               </Pressable>
 
               <Pressable
@@ -777,7 +778,7 @@ export default function LoginScreen() {
                   ref={phoneInputRef}
                   value={phone}
                   onChangeText={(v) => setPhone(v.replace(/\D/g, '').slice(0, 11))}
-                  placeholder="请输入手机号"
+                  placeholder={uiText("请输入手机号")}
                   placeholderTextColor="#B4B9B0"
                   keyboardType="phone-pad"
                   textContentType="telephoneNumber"
@@ -793,7 +794,7 @@ export default function LoginScreen() {
                   <TextInput
                     value={code}
                     onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="短信验证码"
+                    placeholder={uiText("短信验证码")}
                     placeholderTextColor="#B4B9B0"
                     keyboardType="number-pad"
                     textContentType="oneTimeCode"
@@ -808,11 +809,11 @@ export default function LoginScreen() {
                   disabled={busy || codeBusy || countdown > 0}
                   style={({ pressed }) => [{ width: 104, height: 54, borderRadius: 15, borderWidth: 1.5, borderColor: fieldBorder, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12, backgroundColor: fieldBg }, pressed && { opacity: 0.82 }, (busy || codeBusy || countdown > 0) && { opacity: 0.55 }]}
                 >
-                  {codeBusy ? <ActivityIndicator color={heroGreen} size="small" /> : <Text style={{ color: heroGreen, fontSize: 14, fontWeight: '800' }}>{countdown > 0 ? `${countdown}s` : '获取验证码'}</Text>}
+                  {codeBusy ? <ActivityIndicator color={heroGreen} size="small" /> : <Text style={{ color: heroGreen, fontSize: 14, fontWeight: '800' }}>{countdown > 0 ? `${countdown}s` : uiText('获取验证码')}</Text>}
                 </Pressable>
               </View>
 
-              {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 12 }}>{error}</Text> : null}
+              {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 12 }}>{uiText(error)}</Text> : null}
               {Agreement}
 
               <Pressable onPress={onBaizhiSubmit} disabled={loginDisabled} style={({ pressed }) => [{ height: 54, backgroundColor: heroGreen2, borderRadius: 15, alignItems: 'center', justifyContent: 'center', marginTop: 4, overflow: 'hidden' }, primaryShadow, (loginDisabled || pressed) && { opacity: loginDisabled ? 0.55 : 0.86 }]}>
@@ -820,14 +821,14 @@ export default function LoginScreen() {
                 {busy ? (
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                     <ActivityIndicator color="#FFFFFF" size="small" />
-                    <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800' }}>{phase || '登录中…'}</Text>
+                    <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800' }}>{uiText(phase || '登录中…')}</Text>
                   </View>
-                ) : <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800', letterSpacing: 2 }}>登 录</Text>}
+                ) : <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800', letterSpacing: 2 }}>{uiText('登 录')}</Text>}
               </Pressable>
             </>
           ) : (
             <>
-              <Text style={{ fontSize: 18, fontWeight: '600', color: darkText, letterSpacing: 0 }}>账号密码登录</Text>
+              <Text style={{ fontSize: 18, fontWeight: '600', color: darkText, letterSpacing: 0 }}>{uiText('账号密码登录')}</Text>
 
               <View style={fieldFrameStyle('email')}>
                 <Icons.mail size={19} color={focused === 'email' ? heroGreen : iconIdle} sw={1.9} />
@@ -838,7 +839,7 @@ export default function LoginScreen() {
 
               <View style={[fieldFrameStyle('pwd'), { paddingRight: 8 }]}>
                 <Icons.lock size={19} color={focused === 'pwd' ? heroGreen : iconIdle} sw={1.9} />
-                <TextInput value={password} onChangeText={setPassword} placeholder="请输入密码" placeholderTextColor="#B4B9B0"
+                <TextInput value={password} onChangeText={setPassword} placeholder={uiText("请输入密码")} placeholderTextColor="#B4B9B0"
                   secureTextEntry={!showPwd} autoCapitalize="none" autoCorrect={false} editable={!busy && !codeBusy}
                   style={inputStyle}
                   onSubmitEditing={onPasswordSubmit} {...focusProps('pwd')} />
@@ -855,9 +856,9 @@ export default function LoginScreen() {
                 {busy ? (
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                     <ActivityIndicator color="#FFFFFF" size="small" />
-                    <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800' }}>{phase || '登录中…'}</Text>
+                    <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800' }}>{uiText(phase || '登录中…')}</Text>
                   </View>
-                ) : <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800', letterSpacing: 2 }}>登 录</Text>}
+                ) : <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '800', letterSpacing: 2 }}>{uiText('登 录')}</Text>}
               </Pressable>
 
             </>
@@ -866,15 +867,15 @@ export default function LoginScreen() {
           {/* 服务器设置：默认隐藏，连点 logo 6 次后出现 */}
           {showServer ? (
             <View style={{ marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderColor: t.line }}>
-              <Text style={{ fontSize: 13, color: t.tx2, marginBottom: 8 }}>服务器地址</Text>
+              <Text style={{ fontSize: 13, color: t.tx2, marginBottom: 8 }}>{uiText('服务器地址')}</Text>
               <TextInput value={serverUrl} onChangeText={setServerUrl} placeholder="https://monkeycode-ai.com" placeholderTextColor={t.tx3}
                 autoCapitalize="none" autoCorrect={false} keyboardType="url" editable={!busy && !codeBusy} style={fieldStyle('server')} {...focusProps('server')} />
-              <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 8 }}>私有化 / 离线部署可在此填写你的服务地址。</Text>
+              <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 8 }}>{uiText('私有化 / 离线部署可在此填写你的服务地址。')}</Text>
 
-              <Text style={{ fontSize: 13, color: t.tx2, marginTop: 16, marginBottom: 8 }}>Basic Auth（可选）</Text>
-              <TextInput value={basicAuthInput} onChangeText={setBasicAuthInput} placeholder="用户名:密码" placeholderTextColor={t.tx3}
+              <Text style={{ fontSize: 13, color: t.tx2, marginTop: 16, marginBottom: 8 }}>{uiText('Basic Auth（可选）')}</Text>
+              <TextInput value={basicAuthInput} onChangeText={setBasicAuthInput} placeholder={uiText("用户名:密码")} placeholderTextColor={t.tx3}
                 autoCapitalize="none" autoCorrect={false} editable={!busy && !codeBusy} style={fieldStyle('basic')} {...focusProps('basic')} />
-              <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 8 }}>测试环境若有 HTTP Basic Auth 代理鉴权，在此填写「用户名:密码」，会作为 Authorization 头发送。</Text>
+              <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 8 }}>{uiText('测试环境若有 HTTP Basic Auth 代理鉴权，在此填写「用户名:密码」，会作为 Authorization 头发送。')}</Text>
             </View>
           ) : null}
         </View>

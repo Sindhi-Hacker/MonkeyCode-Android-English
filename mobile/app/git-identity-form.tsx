@@ -15,6 +15,7 @@ import { Icons, providerIcon } from '@/components/Icons';
 import { GlassNav, LoadingView, PickerSheet, PrimaryButton, type PickerOption } from '@/components/ui';
 import { GIT_PLATFORMS, gitPlatformDef, gitPlatformLabel } from '@/git';
 import { spacing, useTheme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 const TOKEN_DOC_URL = 'https://monkeycode.docs.baizhi.cloud/node/019a95ee-6277-7412-842a-587f25330ae6';
 
@@ -58,7 +59,7 @@ export default function GitIdentityFormScreen() {
         if (!active) return;
         const it = list.find((x) => x.id === params.id);
         if (!it) {
-          Alert.alert('账号不存在', '该 Git 账号可能已被移除。');
+          androidAlert('账号不存在', '该 Git 账号可能已被移除。');
           leave();
           return;
         }
@@ -72,7 +73,7 @@ export default function GitIdentityFormScreen() {
       })
       .catch((e) => {
         if (!active) return;
-        Alert.alert('加载失败', e instanceof ApiError ? e.message : '请稍后重试');
+        androidAlert('加载失败', e instanceof ApiError ? e.message : '请稍后重试');
         leave();
       });
     return () => { active = false; };
@@ -111,13 +112,13 @@ export default function GitIdentityFormScreen() {
 
   const onSave = useCallback(async () => {
     if (saving) return;
-    if (!platform) { Alert.alert('提示', '请选择 Git 平台类型'); return; }
-    if (!baseUrl.trim()) { Alert.alert('提示', '请输入 Git 平台地址'); return; }
-    if (tokenRequired && showTokenField && !accessToken.trim()) { Alert.alert('提示', '请输入 Access Token'); return; }
-    if (!username.trim()) { Alert.alert('提示', '请输入用户名'); return; }
-    if (!isValidUsername(username.trim())) { Alert.alert('提示', '用户名不能包含括号、引号等特殊字符'); return; }
-    if (!email.trim()) { Alert.alert('提示', '请输入邮箱地址'); return; }
-    if (!isValidEmail(email.trim())) { Alert.alert('提示', '请输入有效的邮箱地址'); return; }
+    if (!platform) { androidAlert('提示', '请选择 Git 平台类型'); return; }
+    if (!baseUrl.trim()) { androidAlert('提示', '请输入 Git 平台地址'); return; }
+    if (tokenRequired && showTokenField && !accessToken.trim()) { androidAlert('提示', '请输入 Access Token'); return; }
+    if (!username.trim()) { androidAlert('提示', '请输入用户名'); return; }
+    if (!isValidUsername(username.trim())) { androidAlert('提示', '用户名不能包含括号、引号等特殊字符'); return; }
+    if (!email.trim()) { androidAlert('提示', '请输入邮箱地址'); return; }
+    if (!isValidEmail(email.trim())) { androidAlert('提示', '请输入有效的邮箱地址'); return; }
 
     setSaving(true);
     try {
@@ -141,7 +142,7 @@ export default function GitIdentityFormScreen() {
       }
       leave();
     } catch (e) {
-      Alert.alert(editing ? '保存失败' : '绑定失败', e instanceof ApiError ? e.message : '请检查信息后重试');
+      androidAlert(editing ? '保存失败' : '绑定失败', e instanceof ApiError ? e.message : '请检查信息后重试');
     } finally {
       setSaving(false);
     }
@@ -177,7 +178,7 @@ export default function GitIdentityFormScreen() {
               <PlatIcon size={17} color={platform ? t.acTx : t.tx3} sw={1.8} />
             </View>
             <Text style={{ flex: 1, fontSize: 15, fontWeight: platform ? '600' : '400', color: platform ? (lockPlatform ? t.tx2 : t.tx) : t.tx3 }}>
-              {platform ? gitPlatformLabel(platform) : '请选择平台'}
+              {uiText(platform ? gitPlatformLabel(platform) : '请选择平台')}
             </Text>
             {lockPlatform
               ? <Icons.shield size={15} color={t.tx3} sw={1.8} />
@@ -185,21 +186,21 @@ export default function GitIdentityFormScreen() {
           </Pressable>
 
           {label('Git 平台地址')}
-          <TextInput value={baseUrl} onChangeText={setBaseUrl} placeholder={platformDef?.defaultBaseUrl || '例如：https://gitlab.com'}
+          <TextInput value={baseUrl} onChangeText={setBaseUrl} placeholder={uiText(platformDef?.defaultBaseUrl || '例如：https://gitlab.com')!}
             placeholderTextColor={t.tx3} autoCapitalize="none" autoCorrect={false} keyboardType="url" editable={!saving && !lockPlatform}
             style={fieldStyle('baseUrl', lockPlatform)} {...focusProps('baseUrl')} />
 
           {showTokenField ? (
             <>
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 16, marginBottom: 8 }}>
-                <Text style={{ fontSize: 13, color: t.tx2, fontWeight: '600' }}>Access Token{editing ? <Text style={{ color: t.tx3, fontWeight: '400' }}>（留空不修改）</Text> : null}</Text>
+                <Text style={{ fontSize: 13, color: t.tx2, fontWeight: '600' }}>{uiText('Access Token')}{editing ? <Text style={{ color: t.tx3, fontWeight: '400' }}>{uiText('（留空不修改）')}</Text> : null}</Text>
                 <Pressable onPress={() => Linking.openURL(TOKEN_DOC_URL).catch(() => undefined)} hitSlop={6} style={({ pressed }) => [{ flexDirection: 'row', alignItems: 'center', gap: 4 }, pressed && { opacity: 0.6 }]}>
                   <Icons.alert size={13} color={t.tx2} sw={1.8} />
-                  <Text style={{ fontSize: 12.5, color: t.tx2, fontWeight: '600' }}>如何获取</Text>
+                  <Text style={{ fontSize: 12.5, color: t.tx2, fontWeight: '600' }}>{uiText('如何获取')}</Text>
                 </Pressable>
               </View>
               <View style={[fieldStyle('token'), { flexDirection: 'row', alignItems: 'center', paddingVertical: 0, paddingRight: 6 }]}>
-                <TextInput value={accessToken} onChangeText={setAccessToken} placeholder={editing ? '留空表示不修改' : '请输入 Access Token'} placeholderTextColor={t.tx3}
+                <TextInput value={accessToken} onChangeText={setAccessToken} placeholder={uiText(editing ? '留空表示不修改' : '请输入 Access Token')!} placeholderTextColor={t.tx3}
                   secureTextEntry={!showToken} autoCapitalize="none" autoCorrect={false} editable={!saving}
                   style={{ flex: 1, color: t.tx, fontSize: 15, paddingVertical: Platform.OS === 'ios' ? 13 : 9 }} {...focusProps('token')} />
                 <Pressable onPress={() => setShowToken((v) => !v)} hitSlop={8} style={{ padding: 8 }}>
@@ -210,22 +211,22 @@ export default function GitIdentityFormScreen() {
           ) : null}
 
           {label('用户名')}
-          <TextInput value={username} onChangeText={setUsername} placeholder="Git 平台用户名" placeholderTextColor={t.tx3}
+          <TextInput value={username} onChangeText={setUsername} placeholder={uiText("Git 平台用户名")} placeholderTextColor={t.tx3}
             autoCapitalize="none" autoCorrect={false} editable={!saving} style={fieldStyle('username')} {...focusProps('username')} />
 
           {label('邮箱')}
-          <TextInput value={email} onChangeText={setEmail} placeholder="提交代码用的邮箱地址" placeholderTextColor={t.tx3}
+          <TextInput value={email} onChangeText={setEmail} placeholder={uiText("提交代码用的邮箱地址")} placeholderTextColor={t.tx3}
             autoCapitalize="none" autoCorrect={false} keyboardType="email-address" editable={!saving}
             style={fieldStyle('email')} {...focusProps('email')} />
 
           {label('备注（选填）')}
-          <TextInput value={remark} onChangeText={setRemark} placeholder="便于区分多个账号，如「我的 GitHub」" placeholderTextColor={t.tx3}
+          <TextInput value={remark} onChangeText={setRemark} placeholder={uiText("便于区分多个账号，如「我的 GitHub」")} placeholderTextColor={t.tx3}
             editable={!saving} style={fieldStyle('remark')} {...focusProps('remark')} />
 
           <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 14, lineHeight: 17 }}>
             {isInstallationApp
-              ? '该账号通过 GitHub App 安装，访问凭证由 App 自动管理，无需手动填写 Token。'
-              : 'Token 用于在 Git 仓库中拉取与提交代码，请使用具备仓库读写权限的 Access Token。'}
+              ? '{uiText('该账号通过 GitHub App 安装，访问凭证由 App 自动管理，无需手动填写 Token。')}'
+              : '{uiText('Token 用于在 Git 仓库中拉取与提交代码，请使用具备仓库读写权限的 Access Token。')}'}
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>

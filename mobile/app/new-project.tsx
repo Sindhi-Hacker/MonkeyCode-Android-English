@@ -18,6 +18,7 @@ import { RepoUrlSheet } from '@/components/sheets';
 import { Card, EmptyView, IconButton, LoadingView, PickerSheet, PrimaryButton, type PickerOption } from '@/components/ui';
 import { gitPlatformLabel } from '@/git';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText, uiTextExact } from '@/platformText';
 
 /** 从 owner/repo 或 Git 地址里取一个简短项目名。 */
 function repoShortName(fullName?: string, url?: string): string {
@@ -35,8 +36,8 @@ function ConfigRow({ icon, label, value, placeholder, onPress, divider, t }: { i
         <I size={17} color={t.acTx} sw={1.8} />
       </View>
       <View style={{ flex: 1, minWidth: 0 }}>
-        <Text style={{ fontSize: 12, color: t.tx3, fontWeight: '500' }}>{label}</Text>
-        <Text numberOfLines={1} style={{ fontSize: 14.5, fontWeight: '600', color: value ? t.tx : t.tx3, marginTop: 1 }}>{value || placeholder}</Text>
+        <Text style={{ fontSize: 12, color: t.tx3, fontWeight: '500' }} >{uiText(label)}</Text>
+        <Text numberOfLines={1} style={{ fontSize: 14.5, fontWeight: '600', color: value ? t.tx : t.tx3, marginTop: 1 }} >{uiText(value || placeholder)}</Text>
       </View>
       <Icons.chevron size={17} color={t.tx3} sw={1.9} />
     </Pressable>
@@ -66,7 +67,7 @@ function RepoPickerModal({ visible, repos, loading, error, selectedUrl, onPick, 
         <View style={{ paddingTop: insets.top, backgroundColor: t.bg2, borderBottomWidth: 1, borderColor: t.line }}>
           <View style={{ height: 52, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 }}>
             <View style={{ width: 40 }} />
-            <Text style={{ flex: 1, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>选择仓库</Text>
+            <Text style={{ flex: 1, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{uiText('选择仓库')}</Text>
             <Pressable onPress={onRefresh} hitSlop={8} style={{ padding: 8 }} disabled={loading}>
               <Icons.refresh size={20} color={loading ? t.tx3 : t.tx2} sw={2} />
             </Pressable>
@@ -76,7 +77,7 @@ function RepoPickerModal({ visible, repos, loading, error, selectedUrl, onPick, 
           <View style={{ paddingHorizontal: spacing.pad, paddingBottom: 12 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9, backgroundColor: t.bg3, borderRadius: 12, paddingHorizontal: 13, height: 42 }}>
               <Icons.search size={17} color={t.tx3} sw={1.9} />
-              <TextInput value={query} onChangeText={setQuery} placeholder="搜索仓库名称" placeholderTextColor={t.tx3}
+              <TextInput value={query} onChangeText={setQuery} placeholder={uiText("搜索仓库名称")} placeholderTextColor={t.tx3}
                 autoCapitalize="none" autoCorrect={false} style={{ flex: 1, color: t.tx, fontSize: 14.5 }} />
               {query ? <Pressable onPress={() => setQuery('')} hitSlop={8}><Icons.plus size={16} color={t.tx3} sw={2} style={{ transform: [{ rotate: '45deg' }] }} /></Pressable> : null}
             </View>
@@ -91,8 +92,8 @@ function RepoPickerModal({ visible, repos, loading, error, selectedUrl, onPick, 
                 <Icons.edit size={17} color={t.acTx} sw={1.8} />
               </View>
               <View style={{ flex: 1, minWidth: 0 }}>
-                <Text style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>手动输入仓库地址</Text>
-                <Text style={{ fontSize: 11.5, color: t.tx3, marginTop: 2 }}>列表里没有？直接填写 Git 仓库地址</Text>
+                <Text style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>{uiText('手动输入仓库地址')}</Text>
+                <Text style={{ fontSize: 11.5, color: t.tx3, marginTop: 2 }}>{uiText('列表里没有？直接填写 Git 仓库地址')}</Text>
               </View>
               <Icons.chevron size={16} color={t.tx3} sw={1.9} />
             </Pressable>
@@ -102,11 +103,11 @@ function RepoPickerModal({ visible, repos, loading, error, selectedUrl, onPick, 
             ) : error ? (
               <View style={{ paddingVertical: 36, alignItems: 'center', gap: 10, paddingHorizontal: 30 }}>
                 <Icons.alert size={24} color={t.tx3} sw={1.8} />
-                <Text style={{ color: t.tx3, fontSize: 13, textAlign: 'center' }}>{error}</Text>
+                <Text style={{ color: t.tx3, fontSize: 13, textAlign: 'center' }}>{uiText(error)}</Text>
               </View>
             ) : filtered.length === 0 ? (
               <View style={{ paddingVertical: 36, alignItems: 'center', gap: 8 }}>
-                <Text style={{ color: t.tx3, fontSize: 13 }}>{repos.length === 0 ? '该账号暂无可访问的仓库' : '没有匹配的仓库'}</Text>
+                <Text style={{ color: t.tx3, fontSize: 13 }}>{uiText(repos.length === 0 ? '该账号暂无可访问的仓库' : '没有匹配的仓库')}</Text>
               </View>
             ) : (
               filtered.map((r, i) => {
@@ -250,7 +251,7 @@ export default function NewProjectScreen() {
       <View style={{ paddingTop: insets.top + 6 }}>
         <View style={{ height: 52, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
           <View style={{ width: 38 }} />
-          <Text style={{ position: 'absolute', left: 56, right: 56, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>新建项目</Text>
+          <Text style={{ position: 'absolute', left: 56, right: 56, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{uiText('新建项目')}</Text>
           <View style={{ marginLeft: 'auto' }}>
             <IconButton icon="plus" onPress={() => router.back()} iconSize={24} sw={2} style={{ transform: [{ rotate: '45deg' }] }} />
           </View>
@@ -270,29 +271,29 @@ export default function NewProjectScreen() {
       ) : (
         <>
           <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.pad, paddingTop: 14, paddingBottom: insets.bottom + 110 }} keyboardShouldPersistTaps="handled">
-            <Text style={{ fontSize: 18, fontWeight: '800', letterSpacing: -0.3, color: t.tx, marginBottom: 16 }}>关联一个代码仓库</Text>
+            <Text style={{ fontSize: 18, fontWeight: '800', letterSpacing: -0.3, color: t.tx, marginBottom: 16 }}>{uiText('关联一个代码仓库')}</Text>
 
             <Card style={{ overflow: 'hidden', marginBottom: 14 }}>
-              <ConfigRow icon="key" label="Git 账号" value={identityValue} placeholder="选择已绑定的账号" onPress={() => setPicking(true)} t={t} />
-              <ConfigRow icon="folder" label="代码仓库" value={repoValue}
-                placeholder={identityId ? '选择仓库' : '请先选择 Git 账号'}
+              <ConfigRow icon="key" label={uiTextExact('Git 账号')!} value={identityValue} placeholder={uiTextExact('选择已绑定的账号')!} onPress={() => setPicking(true)} t={t} />
+              <ConfigRow icon="folder" label={uiTextExact('代码仓库')!} value={repoValue}
+                placeholder={uiText(identityId ? '选择仓库' : '请先选择 Git 账号')!}
                 onPress={() => { if (!identityId) { setPicking(true); return; } setRepoPickerOpen(true); }} divider t={t} />
             </Card>
 
-            <Text style={{ fontSize: 13, color: t.tx2, fontWeight: '600', marginBottom: 8 }}>项目名称</Text>
-            <TextInput value={name} onChangeText={(v) => { setName(v); }} placeholder="给项目起个名字" placeholderTextColor={t.tx3}
+            <Text style={{ fontSize: 13, color: t.tx2, fontWeight: '600', marginBottom: 8 }}>{uiText('项目名称')}</Text>
+            <TextInput value={name} onChangeText={(v) => { setName(v); }} placeholder={uiText("给项目起个名字")} placeholderTextColor={t.tx3}
               editable={!submitting}
               style={{ backgroundColor: t.bg2, borderWidth: 1, borderColor: t.line2, borderRadius: 14, paddingHorizontal: 14, paddingVertical: Platform.OS === 'ios' ? 14 : 10, color: t.tx, fontSize: 15.5, ...t.shCard }} />
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 18 }}>
-              <Text style={{ fontSize: 12, fontWeight: '700', color: t.tx3, letterSpacing: 0.5 }}>没有合适的账号？</Text>
+              <Text style={{ fontSize: 12, fontWeight: '700', color: t.tx3, letterSpacing: 0.5 }}>{uiText('没有合适的账号？')}</Text>
               <Pressable onPress={() => router.push('/git-identities')} hitSlop={6} style={({ pressed }) => [{ flexDirection: 'row', alignItems: 'center', gap: 4 }, pressed && { opacity: 0.6 }]}>
                 <Icons.plus size={14} color={t.acTx} sw={2.2} />
-                <Text style={{ fontSize: 13, color: t.acTx, fontWeight: '700' }}>管理 Git 账号</Text>
+                <Text style={{ fontSize: 13, color: t.acTx, fontWeight: '700' }}>{uiText('管理 Git 账号')}</Text>
               </Pressable>
             </View>
 
-            {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 16 }}>{error}</Text> : null}
+            {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 16 }}>{uiText(error)}</Text> : null}
           </ScrollView>
 
           <View style={{ paddingHorizontal: spacing.pad, paddingTop: 12, paddingBottom: insets.bottom + 14, borderTopWidth: 1, borderColor: t.line, backgroundColor: t.bg }}>

@@ -16,6 +16,7 @@ import { base64DecodeToString, bytesToBase64 } from '@/messages/base64';
 import { Icons, Spinner } from '@/components/Icons';
 import { isNativeFileSaverAvailable, saveFileToDevice } from '@/native/fileSaver';
 import { useTheme, type Theme } from '@/theme';
+import { uiText, uiTextExact, androidAlert } from '@/platformText';
 
 const ADD = '#3fb950';
 const DEL = '#f85149';
@@ -64,7 +65,7 @@ function confirmOverwrite(name: string): Promise<boolean> {
       settled = true;
       resolve(value);
     };
-    Alert.alert(
+    androidAlert(
       '覆盖同名文件？',
       `当前目录已存在“${name}”，继续上传会覆盖它。`,
       [
@@ -115,7 +116,7 @@ function CodeView({ text, t }: { text: string; t: Theme }) {
               <Text style={{ color: t.termTx, fontFamily: 'monospace', fontSize: 12.5, lineHeight: 19 }}>{line || ' '}</Text>
             </View>
           ))}
-          {all.length > MAX_LINES ? <Text style={{ color: t.tx3, fontStyle: 'italic', marginTop: 10, paddingLeft: 56, fontSize: 12 }}>… 文件过长，仅显示前 {MAX_LINES} 行</Text> : null}
+          {all.length > MAX_LINES ? <Text style={{ color: t.tx3, fontStyle: 'italic', marginTop: 10, paddingLeft: 56, fontSize: 12 }}>{uiText(`… 文件过长，仅显示前 ${MAX_LINES} 行`)}</Text> : null}
         </View>
       </ScrollView>
     </ScrollView>
@@ -154,8 +155,8 @@ function SubHeader({ title, subtitle, onBack, t, top, action }: { title: string;
       <View style={{ height: 50, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 6, gap: 4 }}>
         <Pressable onPress={onBack} hitSlop={8} style={{ padding: 8 }}><Icons.back size={22} color={t.tx} sw={2} /></Pressable>
         <View style={{ flex: 1, minWidth: 0 }}>
-          <Text numberOfLines={1} style={{ fontSize: 15, fontWeight: '700', color: t.tx }}>{title}</Text>
-          {subtitle ? <Text numberOfLines={1} style={{ fontSize: 11, color: t.tx3, fontFamily: 'monospace', marginTop: 1 }}>{subtitle}</Text> : null}
+          <Text numberOfLines={1} style={{ fontSize: 15, fontWeight: '700', color: t.tx }}>{uiText(title)}</Text>
+          {subtitle ? <Text numberOfLines={1} style={{ fontSize: 11, color: t.tx3, fontFamily: 'monospace', marginTop: 1 }}>{uiText(subtitle)}</Text> : null}
         </View>
         {action}
       </View>
@@ -167,7 +168,7 @@ function Empty({ icon, label, t }: { icon: React.ReactNode; label: string; t: Th
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24 }}>
       <View style={{ width: 56, height: 56, borderRadius: 18, backgroundColor: t.bg3, alignItems: 'center', justifyContent: 'center' }}>{icon}</View>
-      <Text style={{ color: t.tx3, fontSize: 13.5 }}>{label}</Text>
+      <Text style={{ color: t.tx3, fontSize: 13.5 }}>{uiText(label)}</Text>
     </View>
   );
 }
@@ -207,7 +208,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
   // 自动携带会话 cookie），代价是整包先进内存——@react-native-cookies/cookies 在新架构上不可用，故不走它。
   const download = useCallback(async (item: { path: string; name: string; dir: boolean }) => {
     if (downloading !== null || uploadingFile) return;
-    if (!vmId) { Alert.alert('无法下载', '开发环境不可用，请稍后重试'); return; }
+    if (!vmId) { androidAlert('无法下载', '开发环境不可用，请稍后重试'); return; }
     const downloadName = item.dir ? `${item.name}.zip` : item.name;
     const safeName = downloadName.replace(/[/\\:*?"<>|\s]/g, '_') || 'download';
     const url = getDownloadUrl(vmId, normalizePath(`${WORKDIR}/${item.path}`), downloadName);
@@ -219,29 +220,29 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
     const share = async (uri: string) => {
       if (canceledRef.current) return;
       if (await Sharing.isAvailableAsync()) await Sharing.shareAsync(uri, { dialogTitle: safeName, mimeType: item.dir ? 'application/zip' : undefined });
-      else Alert.alert('已下载', `已保存到：${uri}`);
+      else androidAlert('已下载', `已保存到：${uri}`);
     };
-    const fail = (msg: string) => { if (!canceledRef.current) Alert.alert('下载失败', msg); };
+    const fail = (msg: string) => { if (!canceledRef.current) androidAlert('下载失败', msg); };
     const done = () => { resumableRef.current = null; xhrRef.current = null; setDownloading(null); setDl(null); };
     // 新版原生包用 ACTION_CREATE_DOCUMENT 直接选择最终文件位置；旧包降级到 SAF 目录授权。
     const saveToDevice = async (b64: string) => {
       try {
         if (isNativeFileSaverAvailable()) {
           const savedUri = await saveFileToDevice(target, safeName, mimeForName(safeName));
-          if (savedUri) Alert.alert('已保存', '文件已保存到所选位置');
+          if (savedUri) androidAlert('已保存', '文件已保存到所选位置');
           return;
         }
         const perm = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
         if (!perm.granted) return;
         const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(perm.directoryUri, safeName, mimeForName(safeName));
         await FileSystem.writeAsStringAsync(fileUri, b64, { encoding: FileSystem.EncodingType.Base64 });
-        Alert.alert('已保存', '文件已保存到所选文件夹');
+        androidAlert('已保存', '文件已保存到所选文件夹');
       } catch (e) {
         const message = (e as Error)?.message || '未知错误';
         if (/isn['’]?t writable|not writable/i.test(message)) {
-          Alert.alert('该目录不可写', 'Android 不允许直接写入 Downloads 根目录，请在其中新建并选择一个子文件夹后重试。');
+          androidAlert('该目录不可写', 'Android 不允许直接写入 Downloads 根目录，请在其中新建并选择一个子文件夹后重试。');
         } else {
-          Alert.alert('保存失败', message);
+          androidAlert('保存失败', message);
         }
       }
     };
@@ -266,7 +267,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
           const b64 = bytesToBase64(new Uint8Array(buf));
           await FileSystem.writeAsStringAsync(target, b64, { encoding: FileSystem.EncodingType.Base64 }); // 缓存副本（供分享）
           // Android 分享面板只能发给应用、不能选文件夹，所以下完让用户选：存到设备文件夹 或 分享。
-          Alert.alert('下载完成', safeName, [
+          androidAlert('下载完成', safeName, [
             { text: '保存到设备', onPress: () => { void saveToDevice(b64); } },
             { text: '分享', onPress: () => { void share(target); } },
             { text: '取消', style: 'cancel' },
@@ -358,7 +359,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
 
   const upload = useCallback(async () => {
     if (uploadBusyRef.current || uploadingFile || downloading !== null) return;
-    if (!vmId) { Alert.alert('无法上传', '开发环境不可用，请稍后重试'); return; }
+    if (!vmId) { androidAlert('无法上传', '开发环境不可用，请稍后重试'); return; }
 
     const operation = ++uploadOperationRef.current;
     uploadBusyRef.current = true;
@@ -391,11 +392,11 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
           { name: file.name, path: relativePath, entry_mode: RepoEntryMode.File, size: file.size },
         ]);
       }
-      Alert.alert('上传成功', `${file.name} 已上传到${targetDir ? ` ${targetDir}` : '根目录'}`);
+      androidAlert('上传成功', `${file.name} 已上传到${targetDir ? ` ${targetDir}` : '根目录'}`);
       void Promise.all([loadDir(targetDir, true), loadChanges()]);
     } catch (e) {
       if (!controller?.signal.aborted && uploadOperationRef.current === operation) {
-        Alert.alert('上传失败', (e as Error)?.message || '未知错误');
+        androidAlert('上传失败', (e as Error)?.message || '未知错误');
       }
     } finally {
       if (uploadOperationRef.current === operation) {
@@ -429,8 +430,8 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
 
   const closePanel = useCallback(() => { cancelUpload(); onClose(); }, [cancelUpload, onClose]);
   const openDir = (p: string) => { pathRef.current = p; setPath(p); loadDir(p); };
-  const openFile = async (p: string) => { setViewer({ path: p, content: null }); const c = await control?.getFileContent(p); setViewer({ path: p, content: c ?? '（无法读取该文件）' }); };
-  const openDiff = async (p: string) => { setDiff({ path: p, text: null }); const d = await control?.getFileDiff(p); setDiff({ path: p, text: d || '（无差异内容）' }); };
+  const openFile = async (p: string) => { setViewer({ path: p, content: null }); const c = await control?.getFileContent(p); setViewer({ path: p, content: c ?? uiTextExact('（无法读取该文件）')! }); };
+  const openDiff = async (p: string) => { setDiff({ path: p, text: null }); const d = await control?.getFileDiff(p); setDiff({ path: p, text: d || uiTextExact('（无差异内容）')! }); };
 
   const segs = path ? path.split('/').filter(Boolean) : [];
   const sortedEntries = (entries ?? []).filter((f) => f.name !== '.git').slice().sort((a, b) => {
@@ -463,7 +464,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
           <View style={{ paddingTop: top, backgroundColor: t.bg2, borderBottomWidth: 1, borderColor: t.line }}>
             <View style={{ height: 50, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 6 }}>
               <Pressable onPress={closePanel} hitSlop={8} style={{ padding: 8 }}><Icons.back size={22} color={t.tx} sw={2} /></Pressable>
-              <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: '700', color: t.tx }}>代码文件</Text>
+              <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, fontWeight: '700', color: t.tx }}>{uiText('代码文件')}</Text>
               <Pressable onPress={() => (tab === 'tree' ? loadDir(path) : loadChanges())} hitSlop={8} style={{ padding: 8 }}>
                 {(entriesLoading || changesLoading) ? <Spinner size={18} color={t.acTx} sw={2} /> : <Icons.refresh size={19} color={t.tx2} sw={2} />}
               </Pressable>
@@ -487,7 +488,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={{ alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, gap: 1 }}>
                   <Pressable onPress={() => openDir('')} hitSlop={6} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                     <Icons.folder size={14} color={segs.length ? t.acTx : t.tx} sw={1.9} />
-                    <Text style={{ fontSize: 12.5, color: segs.length ? t.acTx : t.tx, fontWeight: '600' }}>根目录</Text>
+                    <Text style={{ fontSize: 12.5, color: segs.length ? t.acTx : t.tx, fontWeight: '600' }}>{uiText('根目录')}</Text>
                   </Pressable>
                   {segs.map((s, i) => {
                     const p = segs.slice(0, i + 1).join('/');
@@ -513,7 +514,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
               {entriesLoading && !entries ? (
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator color={t.ac} /></View>
               ) : sortedEntries.length === 0 ? (
-                <Empty icon={<Icons.folder size={26} color={t.tx3} sw={1.6} />} label="此目录为空" t={t} />
+                <Empty icon={<Icons.folder size={26} color={t.tx3} sw={1.6} />} label={uiText("此目录为空")!} t={t} />
               ) : (
                 <ScrollView contentContainerStyle={{ paddingVertical: 4 }}>
                   {sortedEntries.map((f, i) => {
@@ -534,7 +535,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
             changesLoading && changes.length === 0 ? (
               <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}><ActivityIndicator color={t.ac} /></View>
             ) : changes.length === 0 ? (
-              <Empty icon={<Icons.check size={26} color={t.tx3} sw={1.9} />} label="暂无文件改动" t={t} />
+              <Empty icon={<Icons.check size={26} color={t.tx3} sw={1.9} />} label={uiText("暂无文件改动")!} t={t} />
             ) : (
               <ScrollView contentContainerStyle={{ padding: 14, gap: 8 }}>
                 {changes.map((c) => {
@@ -568,13 +569,13 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <Spinner size={18} color={t.acTx} sw={2} />
             <View style={{ flex: 1, minWidth: 0 }}>
-              <Text numberOfLines={1} style={{ fontSize: 13.5, fontWeight: '600', color: t.tx }}>正在下载 {dl.name}</Text>
+              <Text numberOfLines={1} style={{ fontSize: 13.5, fontWeight: '600', color: t.tx }}>{uiText(`正在下载 ${dl.name}`)}</Text>
               <Text style={{ fontSize: 11.5, color: t.tx3, marginTop: 1.5 }}>
-                {dl.total ? `${Math.round((dl.bytes / dl.total) * 100)}% · ${formatSize(dl.bytes)} / ${formatSize(dl.total)}` : dl.bytes > 0 ? `已下载 ${formatSize(dl.bytes)}` : '正在准备…'}
+                {dl.total ? `${Math.round((dl.bytes / dl.total) * 100)}% · ${formatSize(dl.bytes)} / ${formatSize(dl.total)}` : dl.bytes > 0 ? `已下载 ${formatSize(dl.bytes)}` : uiText('正在准备…')}
               </Text>
             </View>
             <Pressable onPress={cancelDownload} hitSlop={8} style={({ pressed }) => [{ paddingHorizontal: 14, paddingVertical: 8, borderRadius: 99, backgroundColor: t.bg3 }, pressed && { backgroundColor: t.bg4 }]}>
-              <Text style={{ fontSize: 13, fontWeight: '600', color: t.tx2 }}>取消</Text>
+              <Text style={{ fontSize: 13, fontWeight: '600', color: t.tx2 }}>{uiText('取消')}</Text>
             </Pressable>
           </View>
           {dl.total ? (
@@ -588,7 +589,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <Spinner size={18} color={t.acTx} sw={2} />
             <View style={{ flex: 1, minWidth: 0 }}>
-              <Text numberOfLines={1} style={{ fontSize: 13.5, fontWeight: '600', color: t.tx }}>正在上传 {uploadingFile.name}</Text>
+              <Text numberOfLines={1} style={{ fontSize: 13.5, fontWeight: '600', color: t.tx }}>{uiText(`正在上传 ${uploadingFile.name}`)}</Text>
               <Text numberOfLines={1} style={{ fontSize: 11.5, color: t.tx3, marginTop: 1.5 }}>
                 {uploadPercent != null
                   ? uploadPercent >= 100
@@ -598,7 +599,7 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
               </Text>
             </View>
             <Pressable onPress={cancelUpload} hitSlop={8} style={({ pressed }) => [{ paddingHorizontal: 14, paddingVertical: 8, borderRadius: 99, backgroundColor: t.bg3 }, pressed && { backgroundColor: t.bg4 }]}>
-              <Text style={{ fontSize: 13, fontWeight: '600', color: t.tx2 }}>取消</Text>
+              <Text style={{ fontSize: 13, fontWeight: '600', color: t.tx2 }}>{uiText('取消')}</Text>
             </Pressable>
           </View>
           {uploadPercent != null ? (

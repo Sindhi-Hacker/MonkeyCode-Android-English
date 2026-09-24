@@ -1,4 +1,5 @@
 import { ApiError } from './client';
+import { uiText } from '@/platformText';
 import { solveChallenges } from './captcha';
 
 export const BAIZHI_BASE_URL = 'https://baizhi.cloud';
@@ -71,19 +72,19 @@ async function baizhiRequest<T = unknown>(
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch (e) {
-    throw new ApiError((e as Error)?.message || '百智云网络请求失败');
+    throw new ApiError(uiText((e as Error)?.message || '百智云网络请求失败') ?? (e as Error)?.message ?? 'Network request failed');
   }
 
   let json: BaizhiEnvelope<T> | null = null;
   try {
     json = (await res.json()) as BaizhiEnvelope<T>;
   } catch {
-    if (!res.ok) throw await parseError(res, `百智云请求失败（${res.status}）`);
+    if (!res.ok) throw await parseError(res, uiText(`百智云请求失败（${res.status}）`)!);
     return undefined as T;
   }
 
   if (!res.ok || (typeof json.code === 'number' && json.code !== 0) || json.success === false) {
-    const message = json.message || `百智云请求失败（${res.status}）`;
+    const message = json.message || uiText(`百智云请求失败（${res.status}）`)!;
     throw new ApiError(message.replace(/\s*\[trace_id:[^\]]+\]\s*$/i, '').trim(), json.code, res.status);
   }
   return (json.data ?? json) as T;
@@ -97,11 +98,11 @@ async function obtainBaizhiCaptchaToken(): Promise<string> {
     headers: jsonHeaders,
   });
   if (!challengeRes.ok) {
-    throw new ApiError(`获取百智云验证码失败（${challengeRes.status}）`, undefined, challengeRes.status);
+    throw new ApiError(uiText(`获取百智云验证码失败（${challengeRes.status}）`)!, undefined, challengeRes.status);
   }
   const challenge = (await challengeRes.json()) as ChallengeResp;
   if (!challenge?.token || !challenge?.challenge) {
-    throw new ApiError('百智云验证码响应格式异常');
+    throw new ApiError(uiText('百智云验证码响应格式异常')!);
   }
 
   const redeemRes = await fetch(`${BAIZHI_BASE_URL}/api/v1/public/captcha/redeem`, {
@@ -112,7 +113,7 @@ async function obtainBaizhiCaptchaToken(): Promise<string> {
   });
   const redeem = (await redeemRes.json()) as RedeemResp;
   if (!redeemRes.ok || !redeem?.success || !redeem.token) {
-    throw new ApiError(redeem?.message || '百智云验证码校验失败', undefined, redeemRes.status);
+    throw new ApiError(uiText(redeem?.message || '百智云验证码校验失败')!, undefined, redeemRes.status);
   }
   return redeem.token;
 }
@@ -166,7 +167,7 @@ export async function prepareBaizhiAlipayAppLogin(): Promise<BaizhiAlipayAppAuth
     body: { platform: 'alipay_app' },
   });
   if (!resp?.auth_info || !resp?.request_id) {
-    throw new ApiError('支付宝授权参数响应格式异常');
+    throw new ApiError(uiText('支付宝授权参数响应格式异常')!);
   }
   return {
     authInfo: resp.auth_info,
@@ -201,7 +202,7 @@ export async function getBaizhiOAuthLoginUrl(platform: BaizhiOAuthPlatform, redi
   const resp = await baizhiRequest<OAuthURLResp>('/api/v1/user/oauth/login', {
     query: { platform, redirect_url: redirectUrl },
   });
-  if (!resp?.url) throw new ApiError('未获取到授权地址，请重试');
+  if (!resp?.url) throw new ApiError(uiText('未获取到授权地址，请重试')!);
   return resp.url;
 }
 
