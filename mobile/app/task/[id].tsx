@@ -558,7 +558,7 @@ export default function TaskDetailScreen() {
   const canSwitchModel = !!interactive && !roundRunning && models.length > 0;
   const anyUploading = attachments.some((a) => a.status === 'uploading');
   const canSend = !!input.trim() || attachments.some((a) => a.status === 'done');
-  const title = task ? taskDisplayName(task, '任务详情') : '任务详情';
+  const title = task ? taskDisplayName(task, '任务详情') : uiTextExact('任务详情')!;
 
   // 上下文用量是“事件驱动”的：仅当收到 usage_update（size>0）时才更新；新一轮会重建 handler 把
   // contextUsage 清空，所以这里把最近一次有效用量持久化在组件里，发消息/换轮时不再闪回空白。
@@ -675,7 +675,7 @@ export default function TaskDetailScreen() {
               <Icons.globe size={16} color={t.acTx} sw={2} />
               <Text style={{ color: t.acTx, fontSize: 13, fontWeight: '700' }}>{uiText('在线预览')}</Text>
               <Text numberOfLines={1} style={{ flex: 1, color: t.tx3, fontSize: 12, fontFamily: 'monospace' }}>
-                {previewPorts.length === 1 ? `端口 ${previewPorts[0].port}` : `端口 ${previewPorts.slice(0, 2).map((p) => p.port).join(' · ')}${previewPorts.length > 2 ? ` +${previewPorts.length - 2}` : ''}`}
+                {uiText(previewPorts.length === 1 ? `端口 ${previewPorts[0].port}` : `端口 ${previewPorts.slice(0, 2).map((p) => p.port).join(' · ')}${previewPorts.length > 2 ? ` +${previewPorts.length - 2}` : ''}`)}
               </Text>
               {previewPorts.length > 1 ? <View style={{ minWidth: 18, height: 18, borderRadius: 99, backgroundColor: t.ac, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5 }}><Text style={{ fontSize: 10.5, fontWeight: '800', color: t.acInk }}>{previewPorts.length}</Text></View> : null}
               <Text style={{ color: t.acTx, fontSize: 12.5, fontWeight: '700' }}>{previewPorts.length > 1 ? uiText('选择') : previewMinimized ? uiText('展开') : uiText('访问')}</Text>
@@ -700,7 +700,7 @@ export default function TaskDetailScreen() {
                 : <View style={{ width: 9, height: 9, borderRadius: 99, backgroundColor: t.red }} />}
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                 <Text style={{ color: t.acTx, fontSize: 12.5, fontWeight: '600' }}>
-                  {speech.status === 'connecting' ? '正在连接语音服务' : speech.status === 'stopping' ? '正在转写' : '正在录音，点击结束'}
+                  {uiText(speech.status === 'connecting' ? '正在连接语音服务' : speech.status === 'stopping' ? '正在转写' : '正在录音，点击结束')}
                 </Text>
                 {speech.status === 'connecting' || speech.status === 'stopping' ? <TypingDots color={t.acTx} /> : null}
               </View>
