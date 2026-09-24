@@ -16,7 +16,12 @@ import { useSpeechToText } from '@/speech/useSpeechToText';
 import { DEFAULT_SKILL_IDS, modelLabel, pickDefaultImage, pickDefaultModel, TASK_DEFAULTS } from '@/config';
 import { spacing, useTheme, type Theme } from '@/theme';
 
-const SUGGESTIONS = ['修复一个线上 bug', '为这个仓库写单元测试', '重构这个模块', '解释这段代码做了什么'];
+const SUGGESTIONS = [
+  { label: '修复一个线上 bug', text: '修复一个线上 bug' },
+  { label: '为这个仓库写单元测试', text: '为这个仓库写单元测试' },
+  { label: '重构这个模块', text: '重构这个模块' },
+  { label: '解释这段代码做了什么', text: '解释这段代码做了什么' },
+];
 
 // 「选择仓库」列表里的「手动输入仓库地址」入口标识（区别于真实 project.id）
 const MANUAL_REPO_KEY = '__manual_repo__';
@@ -39,7 +44,7 @@ function ConfigRow({ icon, label, value, sub, divider, onPress, t }: { icon: str
       </View>
       <View style={{ flex: 1, minWidth: 0 }}>
         <Text style={{ fontSize: 12, color: t.tx3, fontWeight: '500' }}>{label}</Text>
-        <Text numberOfLines={1} style={{ fontSize: 14.5, fontWeight: '600', color: t.tx, marginTop: 1 }}>{value}</Text>
+        <Text numberOfLines={1} style={{ fontSize: 14.5, fontWeight: '600', color: t.tx, marginTop: 1 }} >{uiText(value)}</Text>
       </View>
       {sub ? <Text numberOfLines={1} style={{ fontFamily: 'monospace', fontSize: 12, color: t.tx3, maxWidth: 120, marginRight: 4 }}>{sub}</Text> : null}
       <Icons.chevron size={17} color={t.tx3} sw={1.9} />
@@ -254,11 +259,11 @@ export default function NewTaskScreen() {
           </Card>
 
           {/* suggestions */}
-          <Text style={{ fontSize: 12, fontWeight: '700', color: t.tx3, letterSpacing: 0.5, marginBottom: 10 }}>试试这些</Text>
+          <Text style={{ fontSize: 12, fontWeight: '700', color: t.tx3, letterSpacing: 0.5, marginBottom: 10 }} >{uiText('试试这些')}</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             {SUGGESTIONS.map((s) => (
-              <Pressable key={s} onPress={() => setContent(s)} style={{ paddingHorizontal: 13, paddingVertical: 9, borderRadius: 11, backgroundColor: t.bg2, borderWidth: 1, borderColor: t.line }}>
-                <Text style={{ color: t.tx2, fontSize: 13.5, fontWeight: '500' }}>{s}</Text>
+              <Pressable key={s.text} onPress={() => setContent(s.text)} style={{ paddingHorizontal: 13, paddingVertical: 9, borderRadius: 11, backgroundColor: t.bg2, borderWidth: 1, borderColor: t.line }}>
+                <Text style={{ color: t.tx2, fontSize: 13.5, fontWeight: '500' }} >{uiText(s.label)}</Text>
               </Pressable>
             ))}
           </View>
