@@ -64,7 +64,7 @@ function Themed() {
   const t = useTheme();
   // OTA：启动/回前台静默检查下载，下载好后提示一次重启生效（不打断当前操作）。
   useOtaAutoUpdate(useCallback(() => {
-    Alert.alert('发现新版本', '已下载更新，重启应用即可生效。', [
+    androidAlert('发现新版本', '已下载更新，重启应用即可生效。', [
       { text: '稍后' },
       { text: '立即重启', onPress: () => { void applyOta(); } },
     ]);
