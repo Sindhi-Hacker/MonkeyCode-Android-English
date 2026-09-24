@@ -17,10 +17,10 @@ import { DEFAULT_SKILL_IDS, modelLabel, pickDefaultImage, pickDefaultModel, TASK
 import { spacing, useTheme, type Theme } from '@/theme';
 
 const SUGGESTIONS = [
-  { label: '修复一个线上 bug', text: '修复一个线上 bug' },
-  { label: '为这个仓库写单元测试', text: '为这个仓库写单元测试' },
-  { label: '重构这个模块', text: '重构这个模块' },
-  { label: '解释这段代码做了什么', text: '解释这段代码做了什么' },
+  { label: uiTextExact('修复一个线上 bug')!, text: uiTextExact('修复一个线上 bug')! },
+  { label: uiTextExact('为这个仓库写单元测试')!, text: uiTextExact('为这个仓库写单元测试')! },
+  { label: uiTextExact('重构这个模块')!, text: uiTextExact('重构这个模块')! },
+  { label: uiTextExact('解释这段代码做了什么')!, text: uiTextExact('解释这段代码做了什么')! },
 ];
 
 // 「选择仓库」列表里的「手动输入仓库地址」入口标识（区别于真实 project.id）
@@ -43,8 +43,8 @@ function ConfigRow({ icon, label, value, sub, divider, onPress, t }: { icon: str
         <I size={17} color={t.acTx} sw={1.8} />
       </View>
       <View style={{ flex: 1, minWidth: 0 }}>
-        <Text style={{ fontSize: 12, color: t.tx3, fontWeight: '500' }}>{label}</Text>
-        <Text numberOfLines={1} style={{ fontSize: 14.5, fontWeight: '600', color: t.tx, marginTop: 1 }} >{uiText(value)}</Text>
+        <Text style={{ fontSize: 12, color: t.tx3, fontWeight: '500' }}>{uiTextExact(label)}</Text>
+        <Text numberOfLines={1} style={{ fontSize: 14.5, fontWeight: '600', color: t.tx, marginTop: 1 }} >{value}</Text>
       </View>
       {sub ? <Text numberOfLines={1} style={{ fontFamily: 'monospace', fontSize: 12, color: t.tx3, maxWidth: 120, marginRight: 4 }}>{sub}</Text> : null}
       <Icons.chevron size={17} color={t.tx3} sw={1.9} />
@@ -118,10 +118,10 @@ export default function NewTaskScreen() {
   const selectedProject = useMemo(() => projects.find((p) => p.id === repoKey), [projects, repoKey]);
 
   const repoOptions: PickerOption[] = [
-    { key: '', title: '快速开始', sub: '不关联仓库', icon: 'sparkle' },
-    { key: ZIP_REPO_KEY, title: '上传 Zip 文件', sub: zipFile?.name || '选择本地 .zip 压缩包', icon: 'filePlus' },
-    { key: MANUAL_REPO_KEY, title: '手动输入仓库地址', sub: manualRepo || '填写 Git 仓库地址', icon: manualRepo ? providerIconForUrl(manualRepo) : 'git' },
-    ...projects.map((p, i) => ({ key: p.id || `p${i}`, title: p.name || p.full_name || '项目', sub: p.repo_url, icon: providerIconForUrl(p.repo_url) })),
+    { key: '', title: uiTextExact('快速开始')!, sub: uiTextExact('不关联仓库')!, icon: 'sparkle' },
+    { key: ZIP_REPO_KEY, title: uiTextExact('上传 Zip 文件')!, sub: zipFile?.name || uiTextExact('选择本地 .zip 压缩包')!, icon: 'filePlus' },
+    { key: MANUAL_REPO_KEY, title: uiTextExact('手动输入仓库地址')!, sub: manualRepo || uiTextExact('填写 Git 仓库地址')!, icon: manualRepo ? providerIconForUrl(manualRepo) : 'git' },
+    ...projects.map((p, i) => ({ key: p.id || `p${i}`, title: p.name || p.full_name || uiTextExact('项目')!, sub: p.repo_url, icon: providerIconForUrl(p.repo_url) })),
   ];
 
   const selectZip = useCallback(async () => {
@@ -209,7 +209,7 @@ export default function NewTaskScreen() {
     ? zipFile?.name || 'Zip 文件'
     : repoKey === MANUAL_REPO_KEY && manualRepo
     ? repoNameFromUrl(manualRepo)
-    : selectedProject ? (selectedProject.full_name || selectedProject.name || '项目') : '不关联仓库';
+    : selectedProject ? (selectedProject.full_name || selectedProject.name || uiTextExact('项目')!) : uiTextExact('不关联仓库')!;
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: t.bg }} behavior="padding">
@@ -218,7 +218,7 @@ export default function NewTaskScreen() {
       <View style={{ paddingTop: Platform.OS === 'ios' ? 8 : insets.top + 6 }}>
         <View style={{ height: 52, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
           <View style={{ width: 38 }} />
-          <Text style={{ position: 'absolute', left: 56, right: 56, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>新建任务</Text>
+          <Text style={{ position: 'absolute', left: 56, right: 56, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{uiTextExact('新建任务')}</Text>
           <View style={{ marginLeft: 'auto' }}>
             <IconButton icon="plus" onPress={() => router.back()} iconSize={24} sw={2} style={{ transform: [{ rotate: '45deg' }] }} />
           </View>
@@ -232,13 +232,13 @@ export default function NewTaskScreen() {
           {/* headline */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 16 }}>
             <MonkeyLogo size={40} />
-            <Text style={{ fontSize: 18, fontWeight: '800', letterSpacing: -0.3, color: t.tx }}>你想让我做什么呢？</Text>
+            <Text style={{ fontSize: 18, fontWeight: '800', letterSpacing: -0.3, color: t.tx }}>{uiTextExact('你想让我做什么呢？')}</Text>
           </View>
 
           {/* config */}
           <Card style={{ overflow: 'hidden', marginBottom: 14 }}>
             <ConfigRow icon={repoKey === ZIP_REPO_KEY ? 'file' : 'folder'} label="代码仓库" value={repoValue} onPress={() => setPicking('repo')} t={t} />
-            <ConfigRow icon="cube" label="模型" value={selectedModel ? modelLabel(selectedModel) : '选择模型'} divider onPress={() => setPicking('model')} t={t} />
+            <ConfigRow icon="cube" label="模型" value={selectedModel ? modelLabel(selectedModel) : uiTextExact('选择模型')!} divider onPress={() => setPicking('model')} t={t} />
           </Card>
 
           {/* describe */}
@@ -246,7 +246,7 @@ export default function NewTaskScreen() {
             <TextInput
               value={content}
               onChangeText={setContent}
-              placeholder={speech.active ? '请说话…' : '描述任务，比如：修复登录页 token 刷新失效的问题，并补充测试…'}
+              placeholder={uiText(speech.active ? '请说话…' : '描述任务，比如：修复登录页 token 刷新失效的问题，并补充测试…')}
               placeholderTextColor={speech.active ? t.acTx : t.tx3}
               multiline
               style={{ minHeight: 110, color: t.tx, fontSize: 15.5, lineHeight: 22, textAlignVertical: 'top', paddingRight: 40, paddingBottom: 34 }}
@@ -268,8 +268,8 @@ export default function NewTaskScreen() {
             ))}
           </View>
 
-          {loadError ? <Text style={{ color: t.red, fontSize: 13, marginTop: 14 }}>{loadError}</Text> : null}
-          {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 14 }}>{error}</Text> : null}
+          {loadError ? <Text style={{ color: t.red, fontSize: 13, marginTop: 14 }}>{uiText(loadError)}</Text> : null}
+          {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 14 }}>{uiText(error)}</Text> : null}
         </ScrollView>
       )}
 
