@@ -103,7 +103,7 @@ function RepoPickerModal({ visible, repos, loading, error, selectedUrl, onPick, 
             ) : error ? (
               <View style={{ paddingVertical: 36, alignItems: 'center', gap: 10, paddingHorizontal: 30 }}>
                 <Icons.alert size={24} color={t.tx3} sw={1.8} />
-                <Text style={{ color: t.tx3, fontSize: 13, textAlign: 'center' }}>{error}</Text>
+                <Text style={{ color: t.tx3, fontSize: 13, textAlign: 'center' }}>{uiText(error)}</Text>
               </View>
             ) : filtered.length === 0 ? (
               <View style={{ paddingVertical: 36, alignItems: 'center', gap: 8 }}>
