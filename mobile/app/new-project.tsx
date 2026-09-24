@@ -293,7 +293,7 @@ export default function NewProjectScreen() {
               </Pressable>
             </View>
 
-            {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 16 }}>{error}</Text> : null}
+            {error ? <Text style={{ color: t.red, fontSize: 13, marginTop: 16 }}>{uiText(error)}</Text> : null}
           </ScrollView>
 
           <View style={{ paddingHorizontal: spacing.pad, paddingTop: 12, paddingBottom: insets.bottom + 14, borderTopWidth: 1, borderColor: t.line, backgroundColor: t.bg }}>
