@@ -15,6 +15,7 @@ import { Icons, providerIcon } from '@/components/Icons';
 import { GlassNav, LoadingView, PickerSheet, PrimaryButton, type PickerOption } from '@/components/ui';
 import { GIT_PLATFORMS, gitPlatformDef, gitPlatformLabel } from '@/git';
 import { spacing, useTheme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 const TOKEN_DOC_URL = 'https://monkeycode.docs.baizhi.cloud/node/019a95ee-6277-7412-842a-587f25330ae6';
 
