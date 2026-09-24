@@ -71,7 +71,7 @@ export default function MyModelsScreen() {
 
   const onDelete = useCallback((m: Model) => {
     const name = modelLabel(m) || '该模型';
-    Alert.alert('删除模型', `确定要删除「${name}」吗？删除后使用该模型的任务需改用其它模型。`, [
+    androidAlert('删除模型', `确定要删除「${name}」吗？删除后使用该模型的任务需改用其它模型。`, [
       { text: '取消', style: 'cancel' },
       {
         text: '删除',
@@ -106,7 +106,7 @@ export default function MyModelsScreen() {
           ) : (
             <>
               {error ? (
-                <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 12, marginBottom: 10 }}>刷新失败：{error}</Text>
+                <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 12, marginBottom: 10 }}>{uiText('刷新失败：')}{error}</Text>
               ) : null}
               <Card style={{ paddingHorizontal: 15, paddingVertical: 3 }}>
                 {models.map((m, i) => (
