@@ -273,8 +273,8 @@ export default function NewProjectScreen() {
             <Text style={{ fontSize: 18, fontWeight: '800', letterSpacing: -0.3, color: t.tx, marginBottom: 16 }}>{uiText('关联一个代码仓库')}</Text>
 
             <Card style={{ overflow: 'hidden', marginBottom: 14 }}>
-              <ConfigRow icon="key" label="Git 账号" value={identityValue} placeholder="选择已绑定的账号" onPress={() => setPicking(true)} t={t} />
-              <ConfigRow icon="folder" label="代码仓库" value={repoValue}
+              <ConfigRow icon="key" label={uiTextExact('Git 账号')!} value={identityValue} placeholder={uiTextExact('选择已绑定的账号')!} onPress={() => setPicking(true)} t={t} />
+              <ConfigRow icon="folder" label={uiTextExact('代码仓库')!} value={repoValue}
                 placeholder={uiText(identityId ? '选择仓库' : '请先选择 Git 账号')!}
                 onPress={() => { if (!identityId) { setPicking(true); return; } setRepoPickerOpen(true); }} divider t={t} />
             </Card>
