@@ -12,6 +12,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { NativeModules, PermissionsAndroid, Platform } from 'react-native';
 import { getBaseUrl, openWebSocket } from '@/api/client';
+import { uiText } from '@/platformText';
 
 let AudioRecord: {
   init: (o: object) => void;
