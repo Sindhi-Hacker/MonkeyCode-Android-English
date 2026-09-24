@@ -83,17 +83,17 @@ export default function TasksScreen() {
       { text: '取消', style: 'cancel' },
       { text: '终止', style: 'destructive', onPress: async () => {
         try { await stopTask(task.id); removeTask(task.id); }
-        catch (e) { Alert.alert('终止失败', e instanceof ApiError ? e.message : '请稍后重试'); }
+        catch (e) { androidAlert('终止失败', e instanceof ApiError ? e.message : '请稍后重试'); }
       } },
     ]);
   }, [removeTask]);
 
   const confirmDelete = useCallback((task: ProjectTask) => {
-    Alert.alert('删除任务', `删除「${taskDisplayName(task)}」？此操作不可恢复。`, [
+    androidAlert('删除任务', `删除「${taskDisplayName(task)}」？此操作不可恢复。`, [
       { text: '取消', style: 'cancel' },
       { text: '删除', style: 'destructive', onPress: async () => {
         try { await deleteTask(task.id); removeTask(task.id); }
-        catch (e) { Alert.alert('删除失败', e instanceof ApiError ? e.message : '请稍后重试'); }
+        catch (e) { androidAlert('删除失败', e instanceof ApiError ? e.message : '请稍后重试'); }
       } },
     ]);
   }, [removeTask]);
