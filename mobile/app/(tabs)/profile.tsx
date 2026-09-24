@@ -135,7 +135,7 @@ function About({ t }: { t: Theme }) {
           <View style={{ flex: 1, minWidth: 0 }}>
             <Text style={{ fontSize: 14.5, color: t.tx, fontWeight: '500' }}>{uiText('检查更新')}</Text>
             <Text numberOfLines={1} style={{ fontSize: 11.5, color: t.tx3, marginTop: 1 }}>
-              {otaBusy === 'checking' ? '正在检查…' : otaBusy === 'downloading' ? '正在下载更新…' : `当前版本 ${verLine}`}
+              {uiText(otaBusy === 'checking' ? '正在检查…' : otaBusy === 'downloading' ? '正在下载更新…' : `当前版本 ${verLine}`)}
             </Text>
           </View>
           {otaBusy ? <ActivityIndicator size="small" color={t.tx3} /> : <Icons.arrowRight size={15} color={t.tx3} sw={2} />}
@@ -208,7 +208,7 @@ function BindEmailSheet({
               disabled={busy}
               style={({ pressed }) => [{ flex: 1, height: 46, borderRadius: 15, alignItems: 'center', justifyContent: 'center', backgroundColor: t.bg3 }, pressed && { opacity: 0.65 }, busy && { opacity: 0.5 }]}
             >
-              <Text style={{ color: t.tx2, fontSize: 14.5, fontWeight: '700' }}>取消</Text>
+              <Text style={{ color: t.tx2, fontSize: 14.5, fontWeight: '700' }}>{uiText('取消')}</Text>
             </Pressable>
             <Pressable
               onPress={onSubmit}
@@ -528,7 +528,7 @@ export default function ProfileScreen() {
               <Text style={{ fontSize: 12.5, color: t.tx3 }}>{expiry ? `有效期至 ${expiry}` : '长期有效'}</Text>
             </View>
             <Text style={{ paddingTop: 8, paddingBottom: 2, fontSize: 12, fontWeight: '700', color: t.tx3, letterSpacing: 0.5 }}>{uiText('今日额度')}</Text>
-            <QuotaBar name="免费模型" total={dailyTokenLimit} remaining={dailyTokenRemaining} t={t} />
+            <QuotaBar name={uiText('免费模型')!} total={dailyTokenLimit} remaining={dailyTokenRemaining} t={t} />
           </Card>
 
           {/* 代码仓库与模型管理入口 */}
