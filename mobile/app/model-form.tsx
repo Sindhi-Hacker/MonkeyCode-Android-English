@@ -13,6 +13,7 @@ import type { Model, ModelInterfaceType, ProviderModelItem } from '@/api/types';
 import { Icons } from '@/components/Icons';
 import { GlassNav, LoadingView, PickerSheet, PrimaryButton } from '@/components/ui';
 import { spacing, useTheme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 // 与 Web 端一致：用户自有模型固定走 BaiZhiCloud 渠道
 const PROVIDER = 'BaiZhiCloud';
