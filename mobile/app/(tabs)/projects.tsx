@@ -85,7 +85,7 @@ export default function ProjectsScreen() {
               </View>
               <Pressable onPress={() => router.push('/new-project')} style={({ pressed }) => [{ flexDirection: 'row', alignItems: 'center', gap: 5, height: 36, paddingHorizontal: 14, borderRadius: 99, backgroundColor: t.acGhost, marginRight: spacing.pad, marginTop: 14 }, pressed && { opacity: 0.6 }]}>
                 <Icons.plus size={16} color={t.acTx} sw={2.4} />
-                <Text style={{ color: t.acTx, fontSize: 13.5, fontWeight: '700' }}>新建</Text>
+                <Text style={{ color: t.acTx, fontSize: 13.5, fontWeight: '700' }}>{uiText('新建')}</Text>
               </Pressable>
             </View>
           }
@@ -105,7 +105,7 @@ export default function ProjectsScreen() {
           }
           ListFooterComponent={
             loadingMore ? <View style={{ paddingVertical: 20, alignItems: 'center' }}><ActivityIndicator color={t.ac} /></View>
-              : !hasMore && projects.length > 0 ? <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 11, paddingVertical: 18 }}>没有更多了</Text>
+              : !hasMore && projects.length > 0 ? <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 11, paddingVertical: 18 }}>{uiText('没有更多了')}</Text>
               : null
           }
         />
