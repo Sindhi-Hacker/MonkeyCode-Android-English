@@ -16,6 +16,7 @@ import { Icons, Spinner } from '@/components/Icons';
 import { mathJaxReady, mathPlugin, subscribeMathJaxReady, texToSvg } from '@/components/math';
 import { buildMermaidHtml, fenceLanguage, trimFenceContent } from '@/components/mermaidHtml';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText } from '@/platformText';
 
 export type { AnswerMap } from '@/messages/askAnswers';
 export type AnswerSubmitResult = 'sent' | 'queued' | 'rejected';
