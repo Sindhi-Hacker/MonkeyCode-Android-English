@@ -2,6 +2,8 @@ name: Android Debug APK
 
 on:
   push:
+    branches:
+      - "**"
     paths:
       - "mobile/**"
       - "android/**"
