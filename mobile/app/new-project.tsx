@@ -18,6 +18,7 @@ import { RepoUrlSheet } from '@/components/sheets';
 import { Card, EmptyView, IconButton, LoadingView, PickerSheet, PrimaryButton, type PickerOption } from '@/components/ui';
 import { gitPlatformLabel } from '@/git';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText, uiTextExact } from '@/platformText';
 
 /** 从 owner/repo 或 Git 地址里取一个简短项目名。 */
 function repoShortName(fullName?: string, url?: string): string {
