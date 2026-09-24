@@ -14,6 +14,7 @@ import { ModelIcon } from '@/components/ModelIcon';
 import { Card, EmptyView, GlassNav, IconButton, LoadingView, PrimaryButton } from '@/components/ui';
 import { modelLabel } from '@/config';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 function ModelRow({ model, onPress, onDelete, divider, t }: { model: Model; onPress: () => void; onDelete: () => void; divider: boolean; t: Theme }) {
   const title = modelLabel(model) || '未命名模型';
