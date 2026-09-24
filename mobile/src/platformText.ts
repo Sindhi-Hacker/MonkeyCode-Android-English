@@ -510,6 +510,11 @@ const EN: Record<string, string> = {
 
 const ENTRIES = Object.entries(EN).sort((a, b) => b[0].length - a[0].length);
 
+export function uiTextExact(value: string | null | undefined): string | null | undefined {
+  if (value == null || Platform.OS !== 'android') return value;
+  return EN[value] ?? value;
+}
+
 export function uiText(value: string | null | undefined): string | null | undefined {
   if (value == null || Platform.OS !== 'android') return value;
   let out = value;
