@@ -16,6 +16,6 @@ export async function saveFileToDevice(
   suggestedName: string,
   mimeType: string,
 ): Promise<string | null> {
-  if (!isNativeFileSaverAvailable()) throw new Error('系统保存功能不可用');
+  if (!isNativeFileSaverAvailable()) throw new Error(uiText('系统保存功能不可用')!);
   return NativeFileSaver!.saveFile(sourceUri, suggestedName, mimeType);
 }
