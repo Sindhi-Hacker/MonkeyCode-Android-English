@@ -6,6 +6,7 @@ import { AiConsentModal, useAiConsent } from '@/components/AiConsent';
 import { Glass } from '@/components/glass';
 import { Icons } from '@/components/Icons';
 import { useTheme } from '@/theme';
+import { uiText } from '@/platformText';
 
 const TAB_META: Record<string, { label: string; icon: string }> = {
   tasks: { label: uiText('任务')!, icon: 'tasks' },
