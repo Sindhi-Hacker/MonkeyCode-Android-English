@@ -143,7 +143,7 @@ export default function ModelFormScreen() {
       })
       .catch((e) => {
         if (!active) return;
-        Alert.alert('加载失败', e instanceof ApiError ? e.message : '请稍后重试');
+        androidAlert('加载失败', e instanceof ApiError ? e.message : '请稍后重试');
         leave();
       });
     return () => { active = false; };
@@ -170,7 +170,7 @@ export default function ModelFormScreen() {
   }, [interfaceType]);
 
   const fetchModels = useCallback(async () => {
-    if (!apiKey.trim()) { Alert.alert('提示', '请先输入 API Token'); return; }
+    if (!apiKey.trim()) { androidAlert('提示', '请先输入 API Token'); return; }
     const url = baseUrl.trim() || DEFAULT_BASE_URLS[interfaceType];
     const preset = STATIC_PROVIDER_MODELS[url];
     if (preset) { setModelOptions(preset); setPickerOpen(true); return; }
@@ -178,13 +178,13 @@ export default function ModelFormScreen() {
     try {
       const models = await listProviderModels({ api_key: apiKey.trim(), base_url: url, provider });
       if (models.length === 0) {
-        Alert.alert('未获取到可用模型', '可直接在「模型名称」中手动填写（与服务商 API 一致）。');
+        androidAlert('未获取到可用模型', '可直接在「模型名称」中手动填写（与服务商 API 一致）。');
       } else {
         setModelOptions(models);
         setPickerOpen(true);
       }
     } catch (e) {
-      Alert.alert('获取模型列表失败', `${e instanceof ApiError ? e.message : '网络错误'}\n可直接手动填写模型名称。`);
+      androidAlert('获取模型列表失败', `${e instanceof ApiError ? e.message : '网络错误'}\n可直接手动填写模型名称。`);
     } finally {
       setLoadingModels(false);
     }
@@ -197,13 +197,13 @@ export default function ModelFormScreen() {
 
   const onSave = useCallback(async () => {
     if (saving) return;
-    if (!baseUrl.trim()) { Alert.alert('提示', '请输入模型 API 地址'); return; }
-    if (!apiKey.trim()) { Alert.alert('提示', '请输入 API Token'); return; }
-    if (!model.trim()) { Alert.alert('提示', '请填写或选择模型名称'); return; }
+    if (!baseUrl.trim()) { androidAlert('提示', '请输入模型 API 地址'); return; }
+    if (!apiKey.trim()) { androidAlert('提示', '请输入 API Token'); return; }
+    if (!model.trim()) { androidAlert('提示', '请填写或选择模型名称'); return; }
     const ctx = parsePositiveInt(contextLimit);
-    if (ctx === null) { setAdvanced(true); Alert.alert('提示', '上下文长度必须为大于 0 的整数'); return; }
+    if (ctx === null) { setAdvanced(true); androidAlert('提示', '上下文长度必须为大于 0 的整数'); return; }
     const out = parsePositiveInt(outputLimit);
-    if (out === null) { setAdvanced(true); Alert.alert('提示', '输出长度必须为大于 0 的整数'); return; }
+    if (out === null) { setAdvanced(true); androidAlert('提示', '输出长度必须为大于 0 的整数'); return; }
 
     const conn: ConnFields = {
       provider,
@@ -226,7 +226,7 @@ export default function ModelFormScreen() {
         setSaving('检查模型中…');
         const check = await checkModelConfig(conn);
         if (!check.success) {
-          Alert.alert('模型配置检查失败', check.error || '请确认 API 地址、Token 与模型名称无误。');
+          androidAlert('模型配置检查失败', check.error || '请确认 API 地址、Token 与模型名称无误。');
           return;
         }
         phase = '保存';
@@ -246,7 +246,7 @@ export default function ModelFormScreen() {
     } catch (e) {
       // 区分阶段：检查阶段的网络异常不该被说成「修改/绑定失败」（此时什么都没改）
       const title = phase === '检查' ? '模型检查失败' : editing ? '修改模型失败' : '绑定模型失败';
-      Alert.alert(title, e instanceof ApiError ? e.message : '请稍后重试');
+      androidAlert(title, e instanceof ApiError ? e.message : '请稍后重试');
     } finally {
       setSaving(null);
     }
@@ -255,7 +255,7 @@ export default function ModelFormScreen() {
   const switchRow = (text: string, sub: string, value: boolean, onChange: (v: boolean) => void) => (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: t.bg3, borderWidth: 1, borderColor: t.line2, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10, marginTop: 10 }}>
       <View style={{ flex: 1, minWidth: 0 }}>
-        <Text style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>{text}</Text>
+        <Text style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>{uiText(text)}</Text>
         <Text style={{ fontSize: 11.5, color: t.tx3, marginTop: 2 }} >{uiText(sub)}</Text>
       </View>
       <Switch value={value} onValueChange={onChange} trackColor={{ true: t.ac }} disabled={!!saving} />
