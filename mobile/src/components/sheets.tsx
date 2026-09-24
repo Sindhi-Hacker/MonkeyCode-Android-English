@@ -15,6 +15,7 @@ import { groupModels, modelLabel } from '@/config';
 import type { AvailableCommand } from '@/messages/handler';
 import { Scrim } from '@/components/ui';
 import { useTheme, type Theme } from '@/theme';
+import { uiText } from '@/platformText';
 
 function rowLabel(m: Model, groupLabel: string): string {
   const full = modelLabel(m);
@@ -37,10 +38,10 @@ function SheetShell({ title, subtitle, onClose, action, children }: { title: str
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, maxHeight: '80%', backgroundColor: t.bg2, borderTopLeftRadius: 26, borderTopRightRadius: 26, borderTopWidth: StyleSheet.hairlineWidth, borderColor: t.line2, paddingBottom: insets.bottom + 14, ...t.shLift }}>
         <View style={{ width: 38, height: 4, borderRadius: 99, backgroundColor: t.line2, alignSelf: 'center', marginTop: 10, marginBottom: 6 }} />
         <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18 }}>
-          <Text style={{ flex: 1, fontSize: 17, fontWeight: '700', color: t.tx }}>{title}</Text>
+          <Text style={{ flex: 1, fontSize: 17, fontWeight: '700', color: t.tx }}>{uiText(title)}</Text>
           {action}
         </View>
-        {subtitle ? <Text style={{ paddingHorizontal: 18, paddingTop: 3, fontSize: 12.5, color: t.tx3 }}>{subtitle}</Text> : null}
+        {subtitle ? <Text style={{ paddingHorizontal: 18, paddingTop: 3, fontSize: 12.5, color: t.tx3 }}>{uiText(subtitle)}</Text> : null}
         <ScrollView style={{ marginTop: 8 }} contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: 8 }}>
           {children}
         </ScrollView>
@@ -64,10 +65,10 @@ export function ModelSheet({ visible, models, selectedId, onPick, onClose, title
           return (
             <View key={g.key} style={{ marginTop: 4 }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 8, paddingTop: 10, paddingBottom: 4 }}>
-                <Text style={{ fontSize: 11.5, fontWeight: '700', color: t.tx3, letterSpacing: 0.5 }}>{g.label}</Text>
+                <Text style={{ fontSize: 11.5, fontWeight: '700', color: t.tx3, letterSpacing: 0.5 }}>{uiText(g.label)}</Text>
                 {bt ? (
                   <View style={{ paddingHorizontal: 8, paddingVertical: 2, borderRadius: 99, backgroundColor: bt.bg }}>
-                    <Text style={{ fontSize: 10.5, fontWeight: '600', color: bt.c }}>{g.badge}</Text>
+                    <Text style={{ fontSize: 10.5, fontWeight: '600', color: bt.c }}>{uiText(g.badge)}</Text>
                   </View>
                 ) : null}
               </View>
@@ -79,7 +80,7 @@ export function ModelSheet({ visible, models, selectedId, onPick, onClose, title
                       <ModelIcon model={m.model} size={21} />
                     </View>
                     <View style={{ flex: 1, minWidth: 0 }}>
-                      <Text numberOfLines={1} style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>{rowLabel(m, g.label)}</Text>
+                      <Text numberOfLines={1} style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>{uiText(rowLabel(m, g.label))}</Text>
                     </View>
                     {on ? <Icons.check size={18} color={t.acTx} sw={2.4} /> : null}
                   </Pressable>
@@ -88,7 +89,7 @@ export function ModelSheet({ visible, models, selectedId, onPick, onClose, title
             </View>
           );
         })}
-        {groups.length === 0 ? <Text style={{ textAlign: 'center', color: t.tx3, paddingVertical: 24 }}>暂无可用模型</Text> : null}
+        {groups.length === 0 ? <Text style={{ textAlign: 'center', color: t.tx3, paddingVertical: 24 }}>{uiText('暂无可用模型')}</Text> : null}
       </SheetShell>
     </Modal>
   );
@@ -113,7 +114,7 @@ export function SkillSheet({ visible, commands, onPick, onClose }: {
             {c.description ? <Text numberOfLines={2} style={{ fontSize: 13, color: t.tx3, marginTop: 3, lineHeight: 18 }}>{c.description}</Text> : null}
           </Pressable>
         ))}
-        {commands.length === 0 ? <Text style={{ textAlign: 'center', color: t.tx3, paddingVertical: 28 }}>当前没有可用指令</Text> : null}
+        {commands.length === 0 ? <Text style={{ textAlign: 'center', color: t.tx3, paddingVertical: 28 }}>{uiText('当前没有可用指令')}</Text> : null}
       </SheetShell>
     </Modal>
   );
@@ -138,7 +139,7 @@ export function PreviewSheet({ visible, ports, refreshing, activeUrl, onOpen, on
         {ports.length === 0 ? (
           <View style={{ alignItems: 'center', paddingVertical: 30, gap: 10 }}>
             <Icons.server size={26} color={t.tx3} sw={1.6} />
-            <Text style={{ color: t.tx3, fontSize: 13 }}>开发环境中没有发现正在监听的端口</Text>
+            <Text style={{ color: t.tx3, fontSize: 13 }}>{uiText('开发环境中没有发现正在监听的端口')}</Text>
           </View>
         ) : (
           ports.slice().sort((a, b) => (a.access_url ? 0 : 1) - (b.access_url ? 0 : 1) || (a.port ?? 0) - (b.port ?? 0)).map((p) => {
@@ -152,16 +153,16 @@ export function PreviewSheet({ visible, ports, refreshing, activeUrl, onOpen, on
                 </View>
                 <View style={{ flex: 1, minWidth: 0 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 7 }}>
-                    <Text style={{ fontSize: 15, fontWeight: '700', color: t.tx }}>端口 {p.port}</Text>
-                    {active ? <View style={{ paddingHorizontal: 7, paddingVertical: 1.5, borderRadius: 99, backgroundColor: t.ac }}><Text style={{ fontSize: 10, fontWeight: '800', color: t.acInk }}>预览中</Text></View> : null}
+                    <Text style={{ fontSize: 15, fontWeight: '700', color: t.tx }} >{uiText(`端口 ${p.port}`)}</Text>
+                    {active ? <View style={{ paddingHorizontal: 7, paddingVertical: 1.5, borderRadius: 99, backgroundColor: t.ac }}><Text style={{ fontSize: 10, fontWeight: '800', color: t.acInk }}>{uiText('预览中')}</Text></View> : null}
                   </View>
                   <Text numberOfLines={1} style={{ fontSize: 11.5, color: t.tx3, marginTop: 2, fontFamily: canAccess ? 'monospace' : undefined }}>
-                    {canAccess ? url : (p.error_message || '暂不可访问')}
+                    {canAccess ? url : uiText(p.error_message || '暂不可访问')}
                   </Text>
                 </View>
                 {canAccess ? (
                   <Pressable onPress={() => onOpen(url)} style={{ flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 99, backgroundColor: active ? t.acGhost : t.ac, borderWidth: active ? 1 : 0, borderColor: t.acLine }}>
-                    <Text style={{ color: active ? t.acTx : t.acInk, fontSize: 13, fontWeight: '600' }}>{active ? '回到' : '访问'}</Text>
+                    <Text style={{ color: active ? t.acTx : t.acInk, fontSize: 13, fontWeight: '600' }}>{active ? uiText('回到') : uiText('访问')}</Text>
                     <Icons.arrowRight size={14} color={active ? t.acTx : t.acInk} sw={2.2} />
                   </Pressable>
                 ) : null}
@@ -191,7 +192,7 @@ export function CopySheet({ visible, text, onClose, onCopyAll }: {
         action={
           <Pressable onPress={() => onCopyAll(text)} hitSlop={8} style={{ flexDirection: 'row', alignItems: 'center', gap: 5, paddingVertical: 6, paddingHorizontal: 11, borderRadius: 10, backgroundColor: t.acGhost }}>
             <Icons.copy size={14} color={t.acTx} />
-            <Text style={{ color: t.acTx, fontSize: 13.5, fontWeight: '600' }}>复制全部</Text>
+            <Text style={{ color: t.acTx, fontSize: 13.5, fontWeight: '600' }}>{uiText('复制全部')}</Text>
           </Pressable>
         }
       >
@@ -241,13 +242,13 @@ export function RepoUrlSheet({ visible, initialUrl, onConfirm, onClose }: {
       <KeyboardAvoidingView behavior="padding" style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 26 }} pointerEvents="box-none">
           <View style={{ width: '100%', backgroundColor: t.bg2, borderRadius: 22, borderWidth: 1, borderColor: t.line2, padding: 20, ...t.shLift }}>
-            <Text style={{ color: t.tx, fontSize: 17, fontWeight: '700' }}>手动输入仓库地址</Text>
-            <Text style={{ color: t.tx3, fontSize: 12.5, marginTop: 4, marginBottom: 14 }}>填写 Git 仓库地址，任务将基于该仓库运行</Text>
+            <Text style={{ color: t.tx, fontSize: 17, fontWeight: '700' }}>{uiText('手动输入仓库地址')}</Text>
+            <Text style={{ color: t.tx3, fontSize: 12.5, marginTop: 4, marginBottom: 14 }}>{uiText('填写 Git 仓库地址，任务将基于该仓库运行')}</Text>
             <TextInput
               ref={inputRef}
               value={url}
               onChangeText={(v) => { setUrl(v); if (err) setErr(''); }}
-              placeholder="https://github.com/owner/repo.git"
+              placeholder={uiText('https://github.com/owner/repo.git')!}
               placeholderTextColor={t.tx3}
               autoCapitalize="none"
               autoCorrect={false}
@@ -256,13 +257,13 @@ export function RepoUrlSheet({ visible, initialUrl, onConfirm, onClose }: {
               onSubmitEditing={confirm}
               style={{ borderWidth: 1, borderColor: err ? t.red : t.line2, borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, fontSize: 14, color: t.tx, backgroundColor: t.bg, fontFamily: 'monospace' }}
             />
-            {err ? <Text style={{ color: t.red, fontSize: 12.5, marginTop: 8 }}>{err}</Text> : null}
+            {err ? <Text style={{ color: t.red, fontSize: 12.5, marginTop: 8 }}>{uiText(err)}</Text> : null}
             <View style={{ flexDirection: 'row', gap: 10, marginTop: 18 }}>
               <Pressable onPress={onClose} style={({ pressed }) => [{ flex: 1, paddingVertical: 13, borderRadius: 13, alignItems: 'center', backgroundColor: t.bg4 }, pressed && { opacity: 0.8 }]}>
-                <Text style={{ color: t.tx2, fontSize: 15, fontWeight: '600' }}>取消</Text>
+                <Text style={{ color: t.tx2, fontSize: 15, fontWeight: '600' }}>{uiText('取消')}</Text>
               </Pressable>
               <Pressable onPress={confirm} style={({ pressed }) => [{ flex: 1, paddingVertical: 13, borderRadius: 13, alignItems: 'center', backgroundColor: t.ac }, pressed && { opacity: 0.85 }]}>
-                <Text style={{ color: t.acInk, fontSize: 15, fontWeight: '700' }}>确定</Text>
+                <Text style={{ color: t.acInk, fontSize: 15, fontWeight: '700' }}>{uiText('确定')}</Text>
               </Pressable>
             </View>
           </View>
