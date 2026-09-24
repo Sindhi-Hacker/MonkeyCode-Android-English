@@ -9,6 +9,7 @@ import { ProjIcon } from '@/components/ProjectCard';
 import { Card, EmptyView, GlassNav, LoadingView, PrimaryButton, StatusBadge } from '@/components/ui';
 import { taskDisplayName, taskTime } from '@/utils/format';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText } from '@/platformText';
 
 const PAGE_SIZE = 20;
 
