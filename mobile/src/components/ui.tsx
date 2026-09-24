@@ -213,7 +213,7 @@ export function BigTitle({ title, sub }: { title: string; sub?: string }) {
   const t = useTheme();
   return (
     <View style={{ paddingHorizontal: spacing.pad, paddingTop:8,  paddingBottom: 2 }}>
-      <Text style={{ fontSize: 31, fontWeight: '500', letterSpacing: -0.9, color: t.tx, lineHeight: 39 }}{title}</Text>
+      <Text style={{ fontSize: 31, fontWeight: '500', letterSpacing: -0.9, color: t.tx, lineHeight: 39 }}>{uiText(title)}</Text>
       {sub ? <Text style={{ fontSize: 13, color: t.tx3, marginTop: 6, fontWeight: '500' }}>{uiText(sub)}</Text> : null}
     </View>
   );
