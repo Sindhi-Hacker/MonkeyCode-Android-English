@@ -58,7 +58,7 @@ async function ensureMicPermission(): Promise<boolean> {
   if (Platform.OS === 'android') {
     try {
       const res = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, {
-        title: '麦克风权限', message: '语音输入需要使用麦克风', buttonPositive: '允许', buttonNegative: '取消',
+        title: uiText('麦克风权限'), message: uiText('语音输入需要使用麦克风'), buttonPositive: uiText('允许'), buttonNegative: uiText('取消'),
       });
       return res === PermissionsAndroid.RESULTS.GRANTED;
     } catch {
