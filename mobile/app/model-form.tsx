@@ -110,7 +110,7 @@ export default function ModelFormScreen() {
         if (!m) {
           // 直接返回列表，Alert 仅作通知 —— Android 上弹窗可点外部关闭，
           // 若停留在本页等按钮回调会卡死在加载态
-          Alert.alert('模型不存在', '该模型可能已被删除。');
+          androidAlert('模型不存在', '该模型可能已被删除。');
           leave();
           return;
         }
@@ -155,7 +155,7 @@ export default function ModelFormScreen() {
     paddingHorizontal: 14, paddingVertical: Platform.OS === 'ios' ? 13 : 9, color: t.tx, fontSize: 15,
   });
   const label = (text: string, top = 16) => (
-    <Text style={{ fontSize: 13, color: t.tx2, fontWeight: '600', marginTop: top, marginBottom: 8 }}>{text}</Text>
+    <Text style={{ fontSize: 13, color: t.tx2, fontWeight: '600', marginTop: top, marginBottom: 8 }} >{uiText(text)}</Text>
   );
 
   // 切换接口格式：地址为空或仍是「当前格式」的默认值（用户未自定义）时，跟随切到新格式的默认地址。
@@ -256,7 +256,7 @@ export default function ModelFormScreen() {
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: t.bg3, borderWidth: 1, borderColor: t.line2, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10, marginTop: 10 }}>
       <View style={{ flex: 1, minWidth: 0 }}>
         <Text style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>{text}</Text>
-        <Text style={{ fontSize: 11.5, color: t.tx3, marginTop: 2 }}>{sub}</Text>
+        <Text style={{ fontSize: 11.5, color: t.tx3, marginTop: 2 }} >{uiText(sub)}</Text>
       </View>
       <Switch value={value} onValueChange={onChange} trackColor={{ true: t.ac }} disabled={!!saving} />
     </View>
@@ -284,7 +284,7 @@ export default function ModelFormScreen() {
               const on = interfaceType === o.k;
               return (
                 <Pressable key={o.k} disabled={!!saving} onPress={() => pickInterface(o.k)} style={[{ flex: 1, height: 34, borderRadius: 9, alignItems: 'center', justifyContent: 'center', backgroundColor: on ? t.bg2 : 'transparent' }, on && t.shCard]}>
-                  <Text numberOfLines={1} style={{ fontSize: 12, fontWeight: on ? '700' : '500', color: on ? t.tx : t.tx2 }}>{o.label}</Text>
+                  <Text numberOfLines={1} style={{ fontSize: 12, fontWeight: on ? '700' : '500', color: on ? t.tx : t.tx2 }} >{uiText(o.label)}</Text>
                 </Pressable>
               );
             })}
@@ -293,11 +293,11 @@ export default function ModelFormScreen() {
           {label('模型 API 地址')}
           <TextInput value={baseUrl} onChangeText={setBaseUrl} placeholder={DEFAULT_BASE_URLS[interfaceType]} placeholderTextColor={t.tx3}
             autoCapitalize="none" autoCorrect={false} keyboardType="url" editable={!saving} style={fieldStyle('baseUrl')} {...focusProps('baseUrl')} />
-          <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 7, fontFamily: 'monospace' }}>{endpointHint(baseUrl, interfaceType)}</Text>
+          <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 7, fontFamily: 'monospace' }} >{uiText(endpointHint(baseUrl, interfaceType))}</Text>
 
           {label('API Token')}
           <View style={[fieldStyle('apiKey'), { flexDirection: 'row', alignItems: 'center', paddingVertical: 0, paddingRight: 6 }]}>
-            <TextInput value={apiKey} onChangeText={setApiKey} placeholder="请输入 API Token" placeholderTextColor={t.tx3}
+            <TextInput value={apiKey} onChangeText={setApiKey} placeholder={uiText("请输入 API Token")} placeholderTextColor={t.tx3}
               secureTextEntry={!showKey} autoCapitalize="none" autoCorrect={false} editable={!saving}
               style={{ flex: 1, color: t.tx, fontSize: 15, paddingVertical: Platform.OS === 'ios' ? 13 : 9 }} {...focusProps('apiKey')} />
             <Pressable onPress={() => setShowKey((v) => !v)} hitSlop={8} style={{ padding: 8 }}>
@@ -308,23 +308,23 @@ export default function ModelFormScreen() {
           {label('模型名称')}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             {/* 与右侧 44 高的按钮同行：固定高度并垂直居中，否则 Android 上 padding 撑出的 ~38 高会让文字偏上 */}
-            <TextInput value={model} onChangeText={setModel} placeholder="与服务商 API 一致，如 deepseek-chat" placeholderTextColor={t.tx3}
+            <TextInput value={model} onChangeText={setModel} placeholder={uiText("与服务商 API 一致，如 deepseek-chat")} placeholderTextColor={t.tx3}
               autoCapitalize="none" autoCorrect={false} editable={!saving}
               style={[fieldStyle('model'), { flex: 1, height: 44, paddingVertical: 0, textAlignVertical: 'center' }]} {...focusProps('model')} />
             <Pressable onPress={fetchModels} disabled={loadingModels || !!saving} style={({ pressed }) => [{ flexDirection: 'row', alignItems: 'center', gap: 5, height: 44, paddingHorizontal: 13, borderRadius: 14, backgroundColor: t.acGhost }, (pressed || loadingModels) && { opacity: 0.6 }]}>
               {loadingModels ? <ActivityIndicator size="small" color={t.acTx} /> : <Icons.search size={14} color={t.acTx} sw={2} />}
-              <Text style={{ color: t.acTx, fontSize: 13, fontWeight: '700' }}>拉取列表</Text>
+              <Text style={{ color: t.acTx, fontSize: 13, fontWeight: '700' }}>{uiText('拉取列表')}</Text>
             </Pressable>
           </View>
-          <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 7 }}>输入 API Token 后可拉取可用模型列表选择；拉取失败时按服务商文档手动填写。</Text>
+          <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 7 }} >{uiText('输入 API Token 后可拉取可用模型列表选择；拉取失败时按服务商文档手动填写。')}</Text>
 
           {label('备注（选填）')}
-          <TextInput value={remark} onChangeText={setRemark} placeholder="模型展示名，如「我的 DeepSeek」" placeholderTextColor={t.tx3}
+          <TextInput value={remark} onChangeText={setRemark} placeholder={uiText("模型展示名，如「我的 DeepSeek」")} placeholderTextColor={t.tx3}
             editable={!saving} style={fieldStyle('remark')} {...focusProps('remark')} />
 
           {/* 高级配置：上下文/输出长度 + 思考/图片开关，默认折叠（编辑时有非默认值会自动展开） */}
           <Pressable onPress={() => setAdvanced((v) => !v)} hitSlop={8} style={({ pressed }) => [{ flexDirection: 'row', alignItems: 'center', gap: 5, marginTop: 20, alignSelf: 'flex-start' }, pressed && { opacity: 0.6 }]}>
-            <Text style={{ fontSize: 13, color: t.tx2, fontWeight: '600' }}>高级配置</Text>
+            <Text style={{ fontSize: 13, color: t.tx2, fontWeight: '600' }}>{uiText('高级配置')}</Text>
             <Icons.chevron size={14} color={t.tx3} sw={2} style={{ transform: [{ rotate: advanced ? '90deg' : '0deg' }] }} />
           </Pressable>
 
