@@ -506,8 +506,6 @@ const EN: Record<string, string> = {
   '请输入邮箱和密码': 'Enter your email and password',
   '用户 ID 已复制': 'User ID copied',
   '邀请链接已复制，分享给好友': 'Invite link copied. Share it with a friend.',
-};
-
   '清新绿': 'Fresh green',
   '天空蓝': 'Sky blue',
   '葡萄紫': 'Grape purple',
@@ -570,6 +568,7 @@ const EN: Record<string, string> = {
   '语音输入需要使用麦克风': 'Voice input requires microphone access',
   '允许': 'Allow',
   '系统保存功能不可用': 'System save function is unavailable',
+};
 
 const ENTRIES = Object.entries(EN).sort((a, b) => b[0].length - a[0].length);
 
