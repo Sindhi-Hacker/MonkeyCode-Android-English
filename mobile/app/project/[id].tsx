@@ -110,7 +110,7 @@ export default function ProjectDetailScreen() {
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
         <ProjIcon size={56} lit t={t} platform={project.platform} />
         <View style={{ flex: 1, minWidth: 0 }}>
-          <Text numberOfLines={1} style={{ fontSize: 22, fontWeight: '800', letterSpacing: -0.4, color: t.tx }}>{project.name || repo || '项目'}</Text>
+          <Text numberOfLines={1} style={{ fontSize: 22, fontWeight: '800', letterSpacing: -0.4, color: t.tx }}>{project.name || repo || uiText('项目')!}</Text>
           {repo ? (
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 5 }}>
               <Icons.git size={13} color={t.tx3} sw={1.7} />
@@ -130,7 +130,7 @@ export default function ProjectDetailScreen() {
         <Stat label="需求" value={issueCount} accent={issueCount > 0} t={t} />
       </View>
 
-      <Text style={{ paddingTop: 18, paddingBottom: 8, fontSize: 12, fontWeight: '700', color: t.tx3, letterSpacing: 0.6 }}>任务</Text>
+      <Text style={{ paddingTop: 18, paddingBottom: 8, fontSize: 12, fontWeight: '700', color: t.tx3, letterSpacing: 0.6 }}>{uiText('任务')}</Text>
     </View>
   ) : null;
 
@@ -156,7 +156,7 @@ export default function ProjectDetailScreen() {
         />
       )}
 
-      <GlassNav title={project?.name || '项目'} onBack={() => router.back()} />
+      <GlassNav title={project?.name || uiText('项目')!} onBack={() => router.back()} />
 
       {project ? (
         <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: spacing.pad, paddingTop: 12, paddingBottom: insets.bottom + 12, backgroundColor: t.bg }}>
