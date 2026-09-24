@@ -15,6 +15,7 @@ import { Card, IconButton, MonkeyLogo, PickerSheet, PrimaryButton, type PickerOp
 import { useSpeechToText } from '@/speech/useSpeechToText';
 import { DEFAULT_SKILL_IDS, modelLabel, pickDefaultImage, pickDefaultModel, TASK_DEFAULTS } from '@/config';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText, uiTextExact } from '@/platformText';
 
 const SUGGESTIONS = [
   { label: uiTextExact('修复一个线上 bug')!, text: uiTextExact('修复一个线上 bug')! },
