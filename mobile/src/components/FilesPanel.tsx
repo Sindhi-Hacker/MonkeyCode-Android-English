@@ -16,6 +16,7 @@ import { base64DecodeToString, bytesToBase64 } from '@/messages/base64';
 import { Icons, Spinner } from '@/components/Icons';
 import { isNativeFileSaverAvailable, saveFileToDevice } from '@/native/fileSaver';
 import { useTheme, type Theme } from '@/theme';
+import { uiText, uiTextExact, androidAlert } from '@/platformText';
 
 const ADD = '#3fb950';
 const DEL = '#f85149';
