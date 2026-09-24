@@ -279,7 +279,7 @@ export default function LoginScreen() {
     setPhase('正在完成 GitHub 登录…');
     try {
       const targetBaseUrl = await applyServerSettings();
-      startBaizhiBridge('GitHub 登录', targetBaseUrl);
+      startBaizhiBridge(uiText('GitHub 登录')!, targetBaseUrl);
     } catch (e) {
       handledGithubCallbackRef.current = false;
       setView('password');
@@ -348,7 +348,7 @@ export default function LoginScreen() {
       const result = await authorizeDouyin();
       setPhase('正在完成抖音登录…');
       await startDouyinAppBaizhiLogin(result.code);
-      startBaizhiBridge('抖音登录', targetBaseUrl, undefined, true);
+      startBaizhiBridge(uiText('抖音登录')!, targetBaseUrl, undefined, true);
     } catch (e) {
       if ((e as { code?: string })?.code === 'E_DOUYIN_CANCELLED') return;
       setError(formatError(e, '抖音登录失败，请重试'));
@@ -368,7 +368,7 @@ export default function LoginScreen() {
       const authorizeUrl = await getBaizhiOAuthLoginUrl('github', GITHUB_CALLBACK_URL);
       handledGithubCallbackRef.current = false;
       setWebOAuthMode('github');
-      setWebOAuthTitle('GitHub 登录');
+      setWebOAuthTitle(uiText('GitHub 登录')!);
       setWebOAuthUrl(authorizeUrl);
       setWebOAuthKey((k) => k + 1);
       setView('oauthWeb');
@@ -391,7 +391,7 @@ export default function LoginScreen() {
         setView('phone');
         return;
       }
-      startBaizhiBridge('支付宝登录', targetBaseUrl, undefined, true);
+      startBaizhiBridge(uiText('支付宝登录')!, targetBaseUrl, undefined, true);
     } finally {
       alipayCompletingRef.current = '';
     }
@@ -504,7 +504,7 @@ export default function LoginScreen() {
       } else {
         await startBaizhiPhoneLogin(cleanPhone, cleanCode);
       }
-      startBaizhiBridge('手机号登录', targetBaseUrl, cleanPhone, true);
+      startBaizhiBridge(uiText('手机号登录')!, targetBaseUrl, cleanPhone, true);
     } catch (e) {
       setError(formatError(e, '登录失败，请重试'));
     } finally {
@@ -685,7 +685,7 @@ export default function LoginScreen() {
         {agreed ? <Icons.check size={12} color="#FFFFFF" sw={3} /> : null}
       </Pressable>
       <Text style={{ flex: 1, fontSize: 12.5, color: mutedText, lineHeight: 19, fontWeight: '600' }}>
-        我已阅读并同意
+        {uiText('我已阅读并同意')}
         <Text onPress={() => openDoc('/user-agreement')} style={{ color: heroGreen, fontWeight: '700' }}>{uiText('《用户协议》')}</Text>
         和
         <Text onPress={() => openDoc('/privacy-policy')} style={{ color: heroGreen, fontWeight: '700' }}>{uiText('《隐私政策》')}</Text>
@@ -794,7 +794,7 @@ export default function LoginScreen() {
                   <TextInput
                     value={code}
                     onChangeText={(v) => setCode(v.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="短信验证码"
+                    placeholder={uiText("短信验证码")}
                     placeholderTextColor="#B4B9B0"
                     keyboardType="number-pad"
                     textContentType="oneTimeCode"
