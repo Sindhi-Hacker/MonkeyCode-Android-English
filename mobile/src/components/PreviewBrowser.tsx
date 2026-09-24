@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import { Icons } from '@/components/Icons';
 import { useTheme } from '@/theme';
+import { uiText } from '@/platformText';
 
 const hostOf = (url: string) => url.replace(/^[a-z]+:\/\//i, '').split(/[/?#]/)[0] || url;
 
@@ -62,7 +63,7 @@ export function PreviewBrowser({ url, minimized, onMinimize, onClose }: {
             <Icons.chevron size={21} color={t.tx} sw={2.2} style={{ transform: [{ rotate: '90deg' }] }} />
           </Pressable>
           <View style={{ flex: 1, minWidth: 0, alignItems: 'center' }}>
-            <Text numberOfLines={1} style={{ fontSize: 13.5, fontWeight: '700', color: t.tx }}>在线预览</Text>
+            <Text numberOfLines={1} style={{ fontSize: 13.5, fontWeight: '700', color: t.tx }}>{uiText('在线预览')}</Text>
             <Text numberOfLines={1} style={{ fontSize: 11, color: t.tx3, fontFamily: 'monospace', maxWidth: '100%' }}>{hostOf(url)}</Text>
           </View>
           <Pressable onPress={() => ref.current?.reload()} hitSlop={8} style={{ padding: 8 }}><Icons.refresh size={18} color={t.tx2} sw={2} /></Pressable>
