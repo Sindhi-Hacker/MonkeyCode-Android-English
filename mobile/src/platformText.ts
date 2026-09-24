@@ -478,8 +478,6 @@ const EN: Record<string, string> = {
   '添加模型': 'Add model',
   '耗时 ': 'Elapsed ',
   ' 秒': ' s',
-};
-
   '新建任务': 'New task',
   '选择 Git 账号': 'Select Git account',
   '加载中…': 'Loading…',
@@ -508,6 +506,7 @@ const EN: Record<string, string> = {
   '请输入邮箱和密码': 'Enter your email and password',
   '用户 ID 已复制': 'User ID copied',
   '邀请链接已复制，分享给好友': 'Invite link copied. Share it with a friend.',
+};
 
 const ENTRIES = Object.entries(EN).sort((a, b) => b[0].length - a[0].length);
 
