@@ -24,7 +24,7 @@ import { EmptyView, IconButton, LoadingView, Ring, RunTimer, Scrim, Toast, Typin
 import { modelLabel } from '@/config';
 import { decodeChunks, type ChatMessage } from '@/messages/handler';
 import { spacing, useTheme, type Theme } from '@/theme';
-import { uiText, androidAlert } from '@/platformText';
+import { uiText, uiTextExact } from '@/platformText';
 import { formatTokens, modelDisplayName, taskDisplayName } from '@/utils/format';
 
 const ROUNDS_PER_FETCH = 1;
