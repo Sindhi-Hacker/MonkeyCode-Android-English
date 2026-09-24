@@ -11,6 +11,7 @@ import { useAuth } from '@/auth/AuthContext';
 import { Icons } from '@/components/Icons';
 import { BigTitle, Card, GlassTop, MonkeyLogo, Pill, Row, Toast } from '@/components/ui';
 import { ACCENTS, ACCENT_KEYS, spacing, useTheme, useThemePrefs, type Theme, type ThemeMode } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 
 const THEME_OPTIONS: { k: ThemeMode; label: string }[] = [
