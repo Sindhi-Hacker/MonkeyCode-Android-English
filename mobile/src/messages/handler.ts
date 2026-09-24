@@ -201,7 +201,7 @@ export class TaskMessageHandler {
         break;
       }
       case 'user-cancel':
-        this.messages.push({ id: nextId(), kind: 'system', text: '已请求取消当前执行', time });
+        this.messages.push({ id: nextId(), kind: 'system', text: uiText('已请求取消当前执行')!, time });
         break;
       case 'task-started':
       case 'ping':
@@ -298,17 +298,17 @@ export class TaskMessageHandler {
       case 'compact_status': {
         const status = data?.update?.status;
         if (status === 'started')
-          this.messages.push({ id: nextId(), kind: 'system', text: '启动上下文压缩', time });
+          this.messages.push({ id: nextId(), kind: 'system', text: uiText('启动上下文压缩')!, time });
         else if (status === 'ended')
-          this.messages.push({ id: nextId(), kind: 'system', text: '上下文压缩完成', time });
+          this.messages.push({ id: nextId(), kind: 'system', text: uiText('上下文压缩完成')!, time });
         break;
       }
       case 'llm_call_retry': {
         const u = data?.update ?? {};
         const msg =
           typeof u.attempt === 'number'
-            ? `模型调用失败，正在重试第 ${u.attempt} 次：${u.message || ''}`
-            : `模型调用失败，正在重试：${u.message || ''}`;
+            ? uiText(`模型调用失败，正在重试第 ${u.attempt} 次：${u.message || ''}`)!
+            : uiText(`模型调用失败，正在重试：${u.message || ''}`)!;
         this.messages.push({ id: nextId(), kind: 'system', text: msg, time });
         break;
       }
@@ -434,7 +434,7 @@ export class TaskMessageHandler {
         id: nextId(),
         kind: 'tool',
         toolCallId: data.toolCallId,
-        title: data.title || '工具调用',
+        title: uiText(data.title || '工具调用'),
         status: data.status,
         toolKind: data.kind,
         rawInput: data.rawInput,
