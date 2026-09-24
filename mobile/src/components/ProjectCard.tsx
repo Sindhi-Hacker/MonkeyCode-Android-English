@@ -5,6 +5,7 @@ import { Icons, providerIcon } from '@/components/Icons';
 import { Card, Chip } from '@/components/ui';
 import { fromNow } from '@/utils/format';
 import { useTheme, type Theme } from '@/theme';
+import { uiText, uiTextExact } from '@/platformText';
 
 export function ProjIcon({ size = 46, lit, t, platform }: { size?: number; lit: boolean; t: Theme; platform?: string }) {
   const I = Icons[providerIcon(platform)] ?? Icons.git;
