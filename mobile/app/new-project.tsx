@@ -66,7 +66,7 @@ function RepoPickerModal({ visible, repos, loading, error, selectedUrl, onPick, 
         <View style={{ paddingTop: insets.top, backgroundColor: t.bg2, borderBottomWidth: 1, borderColor: t.line }}>
           <View style={{ height: 52, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 }}>
             <View style={{ width: 40 }} />
-            <Text style={{ flex: 1, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>选择仓库</Text>
+            <Text style={{ flex: 1, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{uiText('选择仓库')}</Text>
             <Pressable onPress={onRefresh} hitSlop={8} style={{ padding: 8 }} disabled={loading}>
               <Icons.refresh size={20} color={loading ? t.tx3 : t.tx2} sw={2} />
             </Pressable>
@@ -250,7 +250,7 @@ export default function NewProjectScreen() {
       <View style={{ paddingTop: insets.top + 6 }}>
         <View style={{ height: 52, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
           <View style={{ width: 38 }} />
-          <Text style={{ position: 'absolute', left: 56, right: 56, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>新建项目</Text>
+          <Text style={{ position: 'absolute', left: 56, right: 56, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{uiText('新建项目')}</Text>
           <View style={{ marginLeft: 'auto' }}>
             <IconButton icon="plus" onPress={() => router.back()} iconSize={24} sw={2} style={{ transform: [{ rotate: '45deg' }] }} />
           </View>
