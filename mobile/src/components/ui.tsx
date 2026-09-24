@@ -24,7 +24,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { Glass } from '@/components/glass';
 import { Icons, Spinner } from '@/components/Icons';
 import { radius, spacing, statusInfo, toneColors, useTheme, type Theme } from '@/theme';
-import { uiText } from '@/platformText';
+import { uiText, uiTextExact } from '@/platformText';
 
 // MonkeyCode 猴子 logo（随主题：浅色主题用深色猴子，深色主题用亮色猴子）
 const MONKEY_LIGHT = require('../../assets/logo-light.png'); // 深色猴子(透明底) → 浅色背景
@@ -145,7 +145,7 @@ export function StatusBadge({ status }: { status?: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 24, paddingHorizontal: 10, borderRadius: 99, backgroundColor: tc.bg as string }}>
       {s.running ? <Spinner size={13} color={tc.c as string} sw={2} /> : <I size={13} color={tc.c as string} sw={2} />}
-      <Text style={{ color: tc.c as string, fontSize: 12, fontWeight: '600' }}>{uiText(s.label)}</Text>
+      <Text style={{ color: tc.c as string, fontSize: 12, fontWeight: '600' }}>{uiTextExact(s.label)}</Text>
     </View>
   );
 }
@@ -213,7 +213,7 @@ export function BigTitle({ title, sub }: { title: string; sub?: string }) {
   const t = useTheme();
   return (
     <View style={{ paddingHorizontal: spacing.pad, paddingTop:8,  paddingBottom: 2 }}>
-      <Text style={{ fontSize: 31, fontWeight: '500', letterSpacing: -0.9, color: t.tx, lineHeight: 39 }}>{uiText(title)}</Text>
+      <Text style={{ fontSize: 31, fontWeight: '500', letterSpacing: -0.9, color: t.tx, lineHeight: 39 }}{uiTextExact(title)}</Text>
       {sub ? <Text style={{ fontSize: 13, color: t.tx3, marginTop: 6, fontWeight: '500' }}>{uiText(sub)}</Text> : null}
     </View>
   );
@@ -254,7 +254,7 @@ export function PrimaryButton({ label, icon, onPress, disabled, block, style }: 
       style,
     ]}>
       {I ? <I size={block ? 18 : 17} color={t.acInk} sw={2.2} /> : null}
-      <Text style={{ color: t.acInk, fontSize: block ? 16 : 14.5, fontWeight: '700' }}>{uiText(label)}</Text>
+      <Text style={{ color: t.acInk, fontSize: block ? 16 : 14.5, fontWeight: '700' }}>{uiTextExact(label)}</Text>
     </Pressable>
   );
 }
@@ -273,7 +273,7 @@ export function GlassTop({ title, right, collapsed }: { title: string; right?: R
       <Glass radius={0} border intensity={52} style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}>
         <View style={{ height: insets.top }} />
         <View style={{ height: 46, flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.pad }}>
-          <Text style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{uiText(title)}</Text>
+          <Text style={{ position: 'absolute', left: 0, right: 0, textAlign: 'center', fontSize: 16.5, fontWeight: '700', color: t.tx }}>{uiTextExact(title)}</Text>
           <View style={{ marginLeft: 'auto' }}>{right}</View>
         </View>
       </Glass>
