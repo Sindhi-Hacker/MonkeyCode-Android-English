@@ -9,6 +9,7 @@ import { LoadingView } from '@/components/ui';
 import { PreviewProvider } from '@/components/PreviewProvider';
 import { ThemeProvider, useTheme } from '@/theme';
 import { applyOta, useOtaAutoUpdate } from '@/updates/useOtaUpdate';
+import { androidAlert } from '@/platformText';
 
 function RootNav() {
   const { ready, authenticated } = useAuth();
