@@ -145,7 +145,7 @@ export function StatusBadge({ status }: { status?: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, height: 24, paddingHorizontal: 10, borderRadius: 99, backgroundColor: tc.bg as string }}>
       {s.running ? <Spinner size={13} color={tc.c as string} sw={2} /> : <I size={13} color={tc.c as string} sw={2} />}
-      <Text style={{ color: tc.c as string, fontSize: 12, fontWeight: '600' }}>{s.label}</Text>
+      <Text style={{ color: tc.c as string, fontSize: 12, fontWeight: '600' }}>{uiText(s.label)}</Text>
     </View>
   );
 }
@@ -157,13 +157,13 @@ export function RepoLine({ repo, branch, color }: { repo?: string; branch?: stri
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 7, minWidth: 0, flexShrink: 1 }}>
       <Icons.git size={13} color={c} sw={1.7} style={{ opacity: 0.85 }} />
-      <Text numberOfLines={1} style={{ color: c, fontSize: 12, fontFamily: 'monospace', flexShrink: 1 }}>{uiText(repo)}</Text>
+      <Text numberOfLines={1} style={{ color: c, fontSize: 12, fontFamily: 'monospace', flexShrink: 1 }}{repo}</Text>
       {branch ? (
         <>
           <Text style={{ color: c, opacity: 0.4 }}>·</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
             <Icons.branch size={12} color={c} sw={1.7} />
-            <Text style={{ color: c, fontSize: 12, fontFamily: 'monospace' }}>{uiText(branch)}</Text>
+            <Text style={{ color: c, fontSize: 12, fontFamily: 'monospace' }}{branch}</Text>
           </View>
         </>
       ) : null}
@@ -213,7 +213,7 @@ export function BigTitle({ title, sub }: { title: string; sub?: string }) {
   const t = useTheme();
   return (
     <View style={{ paddingHorizontal: spacing.pad, paddingTop:8,  paddingBottom: 2 }}>
-      <Text style={{ fontSize: 31, fontWeight: '500', letterSpacing: -0.9, color: t.tx, lineHeight: 39 }}>{uiText(title)}</Text>
+      <Text style={{ fontSize: 31, fontWeight: '500', letterSpacing: -0.9, color: t.tx, lineHeight: 39 }}{title}</Text>
       {sub ? <Text style={{ fontSize: 13, color: t.tx3, marginTop: 6, fontWeight: '500' }}>{uiText(sub)}</Text> : null}
     </View>
   );
@@ -319,8 +319,8 @@ export function PickerSheet({ title, options, selected, onPick, onClose, onDismi
               <Pressable key={o.key} disabled={o.disabled} onPress={() => onPick(o.key)} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 12, paddingVertical: 13, backgroundColor: on ? t.acGhost : 'transparent', borderRadius: 13, marginBottom: 2, opacity: o.disabled ? 0.4 : 1 }}>
                 {I ? <View style={{ width: 34, height: 34, borderRadius: 9, backgroundColor: t.bg4, alignItems: 'center', justifyContent: 'center' }}><I size={18} color={t.acTx} sw={1.8} /></View> : null}
                 <View style={{ flex: 1, minWidth: 0 }}>
-                  <Text style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>{uiText(o.title)}{o.disabled ? <Text style={{ color: t.tx3, fontWeight: '400', fontSize: 12 }}> {uiText('无额度')}</Text> : o.badge ? <Text style={{ color: t.acTx, fontWeight: '500', fontSize: 11.5 }}>　{uiText(o.badge)}</Text> : null}</Text>
-                  {o.sub ? <Text numberOfLines={1} style={{ fontSize: 11.5, color: t.tx3, marginTop: 2, fontFamily: 'monospace' }}>{uiText(o.sub)}</Text> : null}
+                  <Text style={{ fontSize: 14.5, fontWeight: '600', color: t.tx }}>{o.title}{o.disabled ? <Text style={{ color: t.tx3, fontWeight: '400', fontSize: 12 }}>　无额度</Text> : o.badge ? <Text style={{ color: t.acTx, fontWeight: '500', fontSize: 11.5 }}>　{o.badge}</Text> : null}</Text>
+                  {o.sub ? <Text numberOfLines={1} style={{ fontSize: 11.5, color: t.tx3, marginTop: 2, fontFamily: 'monospace' }}>{o.sub}</Text> : null}
                 </View>
                 {on ? <Icons.check size={18} color={t.ac} sw={2.4} /> : null}
               </Pressable>
@@ -399,7 +399,7 @@ export function Row({ icon, label, value, onPress, divider, danger }: { icon?: s
       {I ? <I size={18} color={danger ? t.red : t.tx2} sw={1.8} /> : null}
       <Text style={{ fontSize: 14.5, fontWeight: '500', color: danger ? t.red : t.tx }}>{label}</Text>
       <View style={{ marginLeft: 'auto', flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-        {value ? <Text style={{ color: t.tx3, fontSize: 13 }}>{uiText(value)}</Text> : null}
+        {value ? <Text style={{ color: t.tx3, fontSize: 13 }}>{value}</Text> : null}
         {onPress ? <Icons.chevron size={16} color={t.tx3} sw={1.9} /> : null}
       </View>
     </View>
