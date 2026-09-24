@@ -8,9 +8,9 @@ import { Icons } from '@/components/Icons';
 import { useTheme } from '@/theme';
 
 const TAB_META: Record<string, { label: string; icon: string }> = {
-  tasks: { label: '任务', icon: 'tasks' },
-  projects: { label: '项目', icon: 'folder' },
-  profile: { label: '我的', icon: 'user' },
+  tasks: { label: uiText('任务')!, icon: 'tasks' },
+  projects: { label: uiText('项目')!, icon: 'folder' },
+  profile: { label: uiText('我的')!, icon: 'user' },
 };
 
 function GlassDock({ state, navigation }: { state: any; navigation: any }) {
