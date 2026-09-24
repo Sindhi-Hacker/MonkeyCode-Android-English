@@ -43,7 +43,7 @@ export function ProjectCard({ project, onPress }: { project: Project; onPress?: 
       </View>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 9, marginTop: 13 }}>
         {active > 0 ? (
-          <Chip color={t.acTx} bg={t.acGhost}><Text style={{ color: t.acTx, fontSize: 12, fontWeight: '500' }}>{uiTextExact(`${active} 个进行中`)}</Text></Chip>
+          <Chip color={t.acTx} bg={t.acGhost}><Text style={{ color: t.acTx, fontSize: 12, fontWeight: '500' }}>{uiText(`${active} 个进行中`)}</Text></Chip>
         ) : (
           <Chip><Text style={{ color: t.tx3, fontSize: 12, fontWeight: '500' }}>{uiTextExact('暂无进行中')}</Text></Chip>
         )}
