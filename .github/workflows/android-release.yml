@@ -1,0 +1,159 @@
+name: Android Release APK
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: "20"
+  JAVA_VERSION: "17"
+  ANDROID_API: "36"
+  BUILD_TOOLS: "36.0.0"
+
+jobs:
+  release:
+    name: Build and publish Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: Checkout tagged source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-${ANDROID_API}" \
+            "build-tools;${BUILD_TOOLS}"
+
+      - name: Validate tag against app version
+        id: version
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./app.json').expo.version")"
+          TAG="${GITHUB_REF_NAME}"
+          EXPECTED_TAG="v${VERSION}"
+
+          echo "App version: ${VERSION}"
+          echo "Git tag: ${TAG}"
+          echo "Expected tag: ${EXPECTED_TAG}"
+
+          if [[ "${TAG}" != "${EXPECTED_TAG}" ]]; then
+            echo "::error::Tag ${TAG} does not match mobile/app.json version ${VERSION}. Expected ${EXPECTED_TAG}."
+            exit 1
+          fi
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit --project tsconfig.json
+
+      - name: Run tests
+        run: npm test -- --runInBand
+
+      - name: Generate Android native project
+        env:
+          CI: "1"
+          EXPO_USE_PRECOMPILED_MODULES: "1"
+        run: npx expo prebuild --platform android --non-interactive
+
+      - name: Build debug APK
+        run: |
+          chmod +x android/gradlew
+          ./android/gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Prepare release files
+        id: artifact
+        shell: bash
+        run: |
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -f "${APK}"
+
+          cp "${APK}" debug-app.apk
+
+          SHA256="$(sha256sum debug-app.apk | awk '{print $1}')"
+          printf '%s  %s\n' "${SHA256}" debug-app.apk > debug-app.apk.sha256
+
+          cat > release-notes.md <<EOF
+          ## MonkeyCode Android ${GITHUB_REF_NAME}
+
+          - App version: ${{ steps.version.outputs.version }}
+          - Commit: ${GITHUB_SHA}
+          - Build: Android debug APK
+          - Compile/target SDK: ${ANDROID_API}
+          - SHA-256: ${SHA256}
+
+          The asset `debug-app.apk` can be installed directly on Android devices that allow APK installation.
+          EOF
+
+          echo "sha256=${SHA256}" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "## Android release build"
+            echo
+            echo "- Tag: ${GITHUB_REF_NAME}"
+            echo "- App version: ${{ steps.version.outputs.version }}"
+            echo "- Commit: ${GITHUB_SHA}"
+            echo "- APK: `debug-app.apk`"
+            echo "- SHA-256: \`${SHA256}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: monkeycode-android-v${{ steps.version.outputs.version }}
+          path: |
+            mobile/debug-app.apk
+            mobile/debug-app.apk.sha256
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Publish GitHub Release
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            mobile/debug-app.apk#debug-app.apk \
+            mobile/debug-app.apk.sha256#debug-app.apk.sha256 \
+            --verify-tag \
+            --title "MonkeyCode Android v${VERSION}" \
+            --notes-file mobile/release-notes.md

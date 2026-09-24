@@ -1,0 +1,124 @@
+name: Android Debug APK
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "mobile/**"
+      - "android/**"
+      - ".github/workflows/android-debug-apk.yml"
+  pull_request:
+    paths:
+      - "mobile/**"
+      - "android/**"
+      - ".github/workflows/android-debug-apk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-debug-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20"
+  JAVA_VERSION: "17"
+  ANDROID_API: "36"
+  BUILD_TOOLS: "36.0.0"
+
+jobs:
+  build:
+    name: Build debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-${ANDROID_API}" \
+            "build-tools;${BUILD_TOOLS}"
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit --project tsconfig.json
+
+      - name: Run tests
+        run: npm test -- --runInBand
+
+      - name: Generate Android native project
+        env:
+          CI: "1"
+          EXPO_USE_PRECOMPILED_MODULES: "1"
+        run: npx expo prebuild --platform android --non-interactive
+
+      - name: Build debug APK
+        run: |
+          chmod +x android/gradlew
+          ./android/gradlew --no-daemon --stacktrace assembleDebug
+
+      - name: Prepare APK
+        id: apk
+        run: |
+          VERSION="$(node -p "require('./app.json').expo.version")"
+          APK="android/app/build/outputs/apk/debug/app-debug.apk"
+
+          test -f "${APK}"
+          cp "${APK}" debug-app.apk
+
+          SHA256="$(sha256sum debug-app.apk | awk '{print $1}')"
+
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "sha256=${SHA256}" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "## Android debug build"
+            echo
+            echo "- App version: ${VERSION}"
+            echo "- Git ref: ${GITHUB_REF_NAME}"
+            echo "- Commit: ${GITHUB_SHA}"
+            echo "- APK: `debug-app.apk`"
+            echo "- SHA-256: \`${SHA256}\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          printf '%s  %s\n' "${SHA256}" debug-app.apk > debug-app.apk.sha256
+
+      - name: Upload debug APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: monkeycode-android-debug-v${{ steps.apk.outputs.version }}-${{ github.run_number }}
+          path: |
+            mobile/debug-app.apk
+            mobile/debug-app.apk.sha256
+          if-no-files-found: error
+          retention-days: 30
