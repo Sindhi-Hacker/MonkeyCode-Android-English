@@ -526,7 +526,7 @@ export default function ProfileScreen() {
                 <Icons.crown size={14} color={t.acTx} sw={1.9} />
                 <Text style={{ color: t.acTx, fontSize: 13, fontWeight: '700' }}>{planLabel(subscription?.plan)}</Text>
               </Pill>
-              <Text style={{ fontSize: 12.5, color: t.tx3 }}>{expiry ? `有效期至 ${expiry}` : '长期有效'}</Text>
+              <Text style={{ fontSize: 12.5, color: t.tx3 }}>{expiry ? uiText(`有效期至 ${expiry}`) : uiTextExact('长期有效')}</Text>
             </View>
             <Text style={{ paddingTop: 8, paddingBottom: 2, fontSize: 12, fontWeight: '700', color: t.tx3, letterSpacing: 0.5 }}>{uiText('今日额度')}</Text>
             <QuotaBar name={uiText('免费模型')!} total={dailyTokenLimit} remaining={dailyTokenRemaining} t={t} />
