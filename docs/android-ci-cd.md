@@ -50,8 +50,8 @@ Example:
 
 `git push origin v260608`
 
-Expo SDK 55 targets Android API 36, which is why the CI environment installs Android platform 36 and build tools 36.0.0. citeturn640280search0
+Expo SDK 55 targets Android API 36, which is why the CI environment installs Android platform 36 and build tools 36.0.0.
 
 ## Why the native Android project is generated in CI
 
-The repository currently does not commit `mobile/android/`. Expo's prebuild step is designed to generate the native project when it does not exist, and `expo run:android` uses the same native build path. citeturn640280search6
+The repository currently does not commit `mobile/android/`. Expo's prebuild step is designed to generate the native project when it does not exist, and `expo run:android` uses the same native build path.
