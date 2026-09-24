@@ -15,6 +15,7 @@ import { Icons, providerIcon } from '@/components/Icons';
 import { Card, EmptyView, GlassNav, IconButton, LoadingView, PrimaryButton, PickerSheet, type PickerOption } from '@/components/ui';
 import { gitPlatformLabel, OAUTH_PLATFORMS } from '@/git';
 import { spacing, useTheme, type Theme } from '@/theme';
+import { uiText, androidAlert } from '@/platformText';
 
 const MANUAL_KEY = '__manual__';
 
