@@ -82,7 +82,7 @@ export default function MyModelsScreen() {
             setModels((list) => list.filter((x) => x.id !== m.id));
             setError(''); // 残留的旧刷新错误不应在删空列表后冒出「加载失败」空态
           } catch (e) {
-            Alert.alert('删除失败', e instanceof ApiError ? e.message : '请稍后重试');
+            androidAlert('删除失败', e instanceof ApiError ? e.message : '请稍后重试');
           }
         },
       },
@@ -118,9 +118,9 @@ export default function MyModelsScreen() {
         </ScrollView>
       )}
 
-      <GlassNav title="我的模型" onBack={() => router.back()} />
+      <GlassNav title={uiText('我的模型')!} onBack={() => router.back()} />
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: spacing.pad, paddingTop: 12, paddingBottom: insets.bottom + 12, backgroundColor: t.bg }}>
-        <PrimaryButton block label="添加模型" icon="plus" onPress={() => router.push('/model-form')} />
+        <PrimaryButton block label={uiText('添加模型')!} icon="plus" onPress={() => router.push('/model-form')} />
       </View>
     </View>
   );
