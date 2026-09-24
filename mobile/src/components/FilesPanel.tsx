@@ -429,8 +429,8 @@ export function FilesPanel({ visible, onClose, control, initialChanges, vmId }: 
 
   const closePanel = useCallback(() => { cancelUpload(); onClose(); }, [cancelUpload, onClose]);
   const openDir = (p: string) => { pathRef.current = p; setPath(p); loadDir(p); };
-  const openFile = async (p: string) => { setViewer({ path: p, content: null }); const c = await control?.getFileContent(p); setViewer({ path: p, content: c ?? '（无法读取该文件）' }); };
-  const openDiff = async (p: string) => { setDiff({ path: p, text: null }); const d = await control?.getFileDiff(p); setDiff({ path: p, text: d || '（无差异内容）' }); };
+  const openFile = async (p: string) => { setViewer({ path: p, content: null }); const c = await control?.getFileContent(p); setViewer({ path: p, content: c ?? uiTextExact('（无法读取该文件）')! }); };
+  const openDiff = async (p: string) => { setDiff({ path: p, text: null }); const d = await control?.getFileDiff(p); setDiff({ path: p, text: d || uiTextExact('（无差异内容）')! }); };
 
   const segs = path ? path.split('/').filter(Boolean) : [];
   const sortedEntries = (entries ?? []).filter((f) => f.name !== '.git').slice().sort((a, b) => {
