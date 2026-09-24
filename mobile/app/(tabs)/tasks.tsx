@@ -13,8 +13,8 @@ import { spacing, useTheme } from '@/theme';
 const PAGE_SIZE = 20;
 
 const FILTERS = [
-  { k: 'running', label: '进行中', status: 'pending,processing' },
-  { k: 'done', label: '已结束', status: 'finished,error' },
+  { k: 'running', label: uiText('进行中')!, status: 'pending,processing' },
+  { k: 'done', label: uiText('已结束')!, status: 'finished,error' },
 ];
 const statusFor = (k: string) => FILTERS.find((f) => f.k === k)?.status ?? '';
 
@@ -79,7 +79,7 @@ export default function TasksScreen() {
   const removeTask = useCallback((id: string) => setTasks((prev) => prev.filter((x) => x.id !== id)), []);
 
   const confirmStop = useCallback((task: ProjectTask) => {
-    Alert.alert('终止任务', `确定终止「${taskDisplayName(task)}」？`, [
+    androidAlert('终止任务', `确定终止「${taskDisplayName(task)}」？`, [
       { text: '取消', style: 'cancel' },
       { text: '终止', style: 'destructive', onPress: async () => {
         try { await stopTask(task.id); removeTask(task.id); }
@@ -121,9 +121,9 @@ export default function TasksScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           const running = item.status === 'pending' || item.status === 'processing';
-          const del = { key: 'delete', label: '删除', icon: 'trash', color: '#fff', bg: t.red, onPress: () => confirmDelete(item) };
+          const del = { key: 'delete', label: uiText('删除')!, icon: 'trash', color: '#fff', bg: t.red, onPress: () => confirmDelete(item) };
           const actions = running
-            ? [{ key: 'stop', label: '终止', icon: 'stop', color: '#fff', bg: t.amber, onPress: () => confirmStop(item) }, del]
+            ? [{ key: 'stop', label: uiText('终止')!, icon: 'stop', color: '#fff', bg: t.amber, onPress: () => confirmStop(item) }, del]
             : [del];
           return (
             <View style={{ paddingHorizontal: spacing.pad }}>
@@ -153,7 +153,7 @@ export default function TasksScreen() {
         }
         ListFooterComponent={
           loadingMore ? <View style={{ paddingVertical: 20, alignItems: 'center' }}><ActivityIndicator color={t.ac} /></View>
-            : !hasMore && tasks.length > 0 ? <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 11, paddingVertical: 18 }}>没有更多了</Text>
+            : !hasMore && tasks.length > 0 ? <Text style={{ textAlign: 'center', color: t.tx3, fontSize: 11, paddingVertical: 18 }}>{uiText('没有更多了')}</Text>
             : null
         }
       />
