@@ -177,7 +177,7 @@ export default function GitIdentityFormScreen() {
               <PlatIcon size={17} color={platform ? t.acTx : t.tx3} sw={1.8} />
             </View>
             <Text style={{ flex: 1, fontSize: 15, fontWeight: platform ? '600' : '400', color: platform ? (lockPlatform ? t.tx2 : t.tx) : t.tx3 }}>
-              {platform ? gitPlatformLabel(platform) : '请选择平台'}
+              {uiText(platform ? gitPlatformLabel(platform) : '请选择平台')}
             </Text>
             {lockPlatform
               ? <Icons.shield size={15} color={t.tx3} sw={1.8} />
@@ -224,8 +224,8 @@ export default function GitIdentityFormScreen() {
 
           <Text style={{ color: t.tx3, fontSize: 11.5, marginTop: 14, lineHeight: 17 }}>
             {isInstallationApp
-              ? '该账号通过 GitHub App 安装，访问凭证由 App 自动管理，无需手动填写 Token。'
-              : 'Token 用于在 Git 仓库中拉取与提交代码，请使用具备仓库读写权限的 Access Token。'}
+              ? '{uiText('该账号通过 GitHub App 安装，访问凭证由 App 自动管理，无需手动填写 Token。')}'
+              : '{uiText('Token 用于在 Git 仓库中拉取与提交代码，请使用具备仓库读写权限的 Access Token。')}'}
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
