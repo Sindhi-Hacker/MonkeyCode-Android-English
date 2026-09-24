@@ -13,6 +13,7 @@
  */
 import type { TaskChunkEntry } from '@/api/types';
 import { base64DecodeToString } from './base64';
+import { uiText } from '@/platformText';
 
 export interface AskQuestion {
   question: string;
