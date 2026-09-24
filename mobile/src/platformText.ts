@@ -480,6 +480,35 @@ const EN: Record<string, string> = {
   ' 秒': ' s',
 };
 
+  '新建任务': 'New task',
+  '选择 Git 账号': 'Select Git account',
+  '加载中…': 'Loading…',
+  '先绑定一个 Git 账号': 'Link a Git account first',
+  '创建项目失败，请重试': 'Failed to create project. Try again.',
+  '请选择 Git 账号': 'Select a Git account',
+  '请选择或填写代码仓库': 'Select or enter a repository',
+  '获取仓库失败': 'Failed to load repositories',
+  '已保存到所选位置': 'Saved to the selected location',
+  '已保存到所选文件夹': 'Saved to the selected folder',
+  '下载完成': 'Download complete',
+  '文件已保存到所选位置': 'File saved to the selected location',
+  '文件已保存到所选文件夹': 'File saved to the selected folder',
+  '无法读取该文件': 'Unable to read this file',
+  '无差异内容': 'No diff content',
+  '该目录不可写': 'This folder is not writable',
+  '下载内容为空': 'Downloaded content is empty',
+  '保存失败': 'Save failed',
+  '网络错误': 'Network error',
+  '上传成功': 'Upload successful',
+  '上传失败': 'Upload failed',
+  '保存修改': 'Save changes',
+  '保存并绑定': 'Save & link',
+  '加载模型配置…': 'Loading model configuration…',
+  '检查并保存': 'Check & save',
+  '请输入邮箱和密码': 'Enter your email and password',
+  '用户 ID 已复制': 'User ID copied',
+  '邀请链接已复制，分享给好友': 'Invite link copied. Share it with a friend.',
+
 const ENTRIES = Object.entries(EN).sort((a, b) => b[0].length - a[0].length);
 
 export function uiText(value: string | null | undefined): string | null | undefined {
