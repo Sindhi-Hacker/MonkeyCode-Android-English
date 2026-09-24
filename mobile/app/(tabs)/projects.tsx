@@ -8,6 +8,7 @@ import { Icons } from '@/components/Icons';
 import { ProjectCard } from '@/components/ProjectCard';
 import { BigTitle, EmptyView, GlassTop, LoadingView, PrimaryButton } from '@/components/ui';
 import { spacing, useTheme } from '@/theme';
+import { uiText } from '@/platformText';
 
 const PAGE_LIMIT = 20;
 
